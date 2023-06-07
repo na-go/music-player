@@ -15,7 +15,6 @@ export const MusicPlayer = () => {
   const [currentTrackName, setCurrentTrackName] = useState<string>('Select Music');  // ここを追加
 
   useEffect(() => {
-    // BehaviorSubjectからの新しい値を購読
     const subscription = playerStateSubject.subscribe((state) => {
       setIsPlaying(state.isPlaying);
       setCurrentTrack(state.currentTrack);
@@ -45,7 +44,7 @@ export const MusicPlayer = () => {
     if (files && files.length > 0) {
       const file = files[0];
       playerStateSubject.next({ ...playerStateSubject.value, currentTrack: file });
-      setCurrentTrackName(file.name);  // ここを追加
+      setCurrentTrackName(file.name);
     }
   }, []);
 
