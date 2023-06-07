@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
+import * as styles from './styles.css';
+
 const playerStateSubject = new BehaviorSubject({
   isPlaying: false,
   currentTrack: null as File | null,
@@ -44,9 +46,24 @@ export const MusicPlayer = () => {
   }, []);
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} accept="audio/*" />
-      <button onClick={handlePlayPauseClick}>{isPlaying ? 'Pause' : 'Play'}</button>
-    </div>
+      <div className={styles.playerContainer}>
+    <label htmlFor="music-file" className={styles.fileInputLabel}>
+      Select Music
+    </label>
+    <input
+      id="music-file"
+      type="file"
+      onChange={handleFileChange}
+      accept="audio/*"
+      className={styles.fileInput}
+    />
+    <button
+      onClick={handlePlayPauseClick}
+      className={styles.playPauseButton}
+      disabled={currentTrack === null}
+    >
+      {isPlaying ? 'Pause' : 'Play'}
+    </button>
+  </div>
   );
 };

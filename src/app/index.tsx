@@ -2,6 +2,7 @@ import { memo } from "react";
 
 import { ThemeProvider } from "@theme/provider";
 
+import { MusicPlayer } from "./music-player";
 import * as styles from "./styles.css";
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
           <section>
             <h1>Music Player</h1>
           </section>
+          <MusicPlayer />
         </main>
         <footer className={styles.footer}></footer>
       </div>
