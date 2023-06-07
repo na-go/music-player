@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { useCallback, useEffect, useState } from "react";
+import { BehaviorSubject } from "rxjs";
 
-import * as styles from './styles.css';
+import * as styles from "./styles.css";
 
 const playerStateSubject = new BehaviorSubject({
   isPlaying: false,
@@ -18,7 +18,7 @@ export const MusicPlayer = () => {
     const subscription = playerStateSubject.subscribe((state) => {
       setIsPlaying(state.isPlaying);
       setCurrentTrack(state.currentTrack);
-      if(state.currentTrack) {
+      if (state.currentTrack) {
         const audioEl = new Audio(URL.createObjectURL(state.currentTrack));
         setAudio(audioEl);
       }
@@ -27,7 +27,7 @@ export const MusicPlayer = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handlePlayPauseClick = useCallback(async() => {
+  const handlePlayPauseClick = useCallback(async () => {
     if (audio) {
       if (!isPlaying) {
         await audio.play();
@@ -46,24 +46,14 @@ export const MusicPlayer = () => {
   }, []);
 
   return (
-      <div className={styles.playerContainer}>
-    <label htmlFor="music-file" className={styles.fileInputLabel}>
-      Select Music
-    </label>
-    <input
-      id="music-file"
-      type="file"
-      onChange={handleFileChange}
-      accept="audio/*"
-      className={styles.fileInput}
-    />
-    <button
-      onClick={handlePlayPauseClick}
-      className={styles.playPauseButton}
-      disabled={currentTrack === null}
-    >
-      {isPlaying ? 'Pause' : 'Play'}
-    </button>
-  </div>
+    <div className={styles.playerContainer}>
+      <label htmlFor="music-file" className={styles.fileInputLabel}>
+        Select Music
+      </label>
+      <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
+      <button onClick={handlePlayPauseClick} className={styles.playPauseButton} disabled={currentTrack === null}>
+        {isPlaying ? "Pause" : "Play"}
+      </button>
+    </div>
   );
 };
