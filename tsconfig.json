@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "@tsconfig/recommended/tsconfig.json",
+    "@tsconfig/esm/tsconfig.json",
+    "@tsconfig/vite-react/tsconfig.json"
+  ],
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "types": ["vitest/globals"],
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@utils/*": ["src/utils/*"],
+      "@theme/*": ["src/theme/*"],
+      "@theme/css": ["src/theme/styles.css.ts"],
+      "@components/*": ["src/components/*"]
+    }
+  },
+  "include": ["src", "types", "vitest-setup.ts"],
+  "exclude": ["node_modules", "dist"]
+}
