@@ -31,10 +31,10 @@ export const fileInputLabel = style({
   ":hover": {
     backgroundColor: "#007BFF",
   },
-  maxWidth: '80%',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
+  maxWidth: "80%",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 });
 
 export const playPauseButton = style({
