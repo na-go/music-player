@@ -1,5 +1,5 @@
-import { memo, useCallback, useEffect, useState, type FC } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { memo, useCallback, useEffect, useState, type FC } from "react";
+import { BehaviorSubject } from "rxjs";
 
 interface PlayerState {
   isPlaying: boolean;
@@ -9,11 +9,11 @@ interface PlayerState {
 const initialPlayerState: PlayerState = {
   isPlaying: false,
   currentTrack: null,
-}
+};
 
 const playerStateSubject = new BehaviorSubject(initialPlayerState);
 
-export const MusicPlayer:FC = () => {
+export const MusicPlayer: FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<File | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -22,7 +22,7 @@ export const MusicPlayer:FC = () => {
     const subscription = playerStateSubject.subscribe((state) => {
       setIsPlaying(state.isPlaying);
       setCurrentTrack(state.currentTrack);
-      if(state.currentTrack) {
+      if (state.currentTrack) {
         const audioEl = new Audio(URL.createObjectURL(state.currentTrack));
         setAudio(audioEl);
       }
@@ -52,7 +52,7 @@ export const MusicPlayer:FC = () => {
   return (
     <div>
       <input type="file" onChange={handleFileChange} accept="audio/*" />
-      <button onClick={handlePlayPauseClick}>{isPlaying ? 'Pause' : 'Play'}</button>
+      <button onClick={handlePlayPauseClick}>{isPlaying ? "Pause" : "Play"}</button>
     </div>
   );
 };
