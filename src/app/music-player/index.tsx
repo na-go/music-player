@@ -12,6 +12,7 @@ export const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<File | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [currentTrackName, setCurrentTrackName] = useState<string>('Select Music');  // ここを追加
 
   useEffect(() => {
     // BehaviorSubjectからの新しい値を購読
@@ -38,17 +39,20 @@ export const MusicPlayer = () => {
     }
   }, [audio, isPlaying]);
 
+
   const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      playerStateSubject.next({ currentTrack: file, isPlaying: false });
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      playerStateSubject.next({ ...playerStateSubject.value, currentTrack: file });
+      setCurrentTrackName(file.name);  // ここを追加
     }
   }, []);
 
   return (
     <div className={styles.playerContainer}>
       <label htmlFor="music-file" className={styles.fileInputLabel}>
-        Select Music
+         {currentTrackName}
       </label>
       <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
       <button onClick={handlePlayPauseClick} className={styles.playPauseButton} disabled={currentTrack === null}>
