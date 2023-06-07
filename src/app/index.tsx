@@ -8,13 +8,13 @@ const App = () => {
   return (
     <ThemeProvider>
       <div className={styles.root}>
-        <header className={styles.header}>header</header>
+        <header className={styles.header}></header>
         <main className={styles.main}>
           <section>
-            <h1>Hello Vite App</h1>
+            <h1>Music Player</h1>
           </section>
         </main>
-        <footer className={styles.footer}>footer</footer>
+        <footer className={styles.footer}></footer>
       </div>
     </ThemeProvider>
   );
