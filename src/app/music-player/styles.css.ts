@@ -58,6 +58,6 @@ export const playPauseButton = style({
 });
 
 export const seekBar = style({
-  width: '80%',
-  cursor: 'pointer',
+  width: "80%",
+  cursor: "pointer",
 });
