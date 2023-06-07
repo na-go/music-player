@@ -13,6 +13,9 @@ const App = () => {
           <section>
             <h1>Hello Vite App</h1>
           </section>
+          <div>
+            deploy test now.
+          </div>
         </main>
         <footer className={styles.footer}>footer</footer>
       </div>
