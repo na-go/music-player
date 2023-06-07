@@ -56,3 +56,8 @@ export const playPauseButton = style({
     cursor: "not-allowed",
   },
 });
+
+export const seekBar = style({
+  width: '80%',
+  cursor: 'pointer',
+});
