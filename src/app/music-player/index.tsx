@@ -3,10 +3,17 @@ import { BehaviorSubject } from "rxjs";
 
 import * as styles from "./styles.css";
 
-const playerStateSubject = new BehaviorSubject({
+interface PlayerState {
+  isPlaying: boolean;
+  currentTrack: File | null;
+}
+
+const initialPlayerState: PlayerState = {
   isPlaying: false,
-  currentTrack: null as File | null,
-});
+  currentTrack: null,
+};
+
+const playerStateSubject = new BehaviorSubject(initialPlayerState);
 
 export const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
