@@ -4,20 +4,6 @@ import { useCallback, useState } from "react";
 import { useAudioPlayer } from "./hooks";
 import * as styles from "./styles.css";
 
-interface PlayerState {
-  isPlaying: boolean;
-  currentTrack: File | null;
-  currentTime: number;
-  duration: number;
-}
-
-const initialPlayerState: PlayerState = {
-  isPlaying: false,
-  currentTrack: null,
-  currentTime: 0,
-  duration: 0,
-};
-
 export const MusicPlayer = () => {
   const { isPlaying$, handleFileChange } = useAudioPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
