@@ -1,6 +1,5 @@
 import { useSubscription } from "observable-hooks";
 import { useCallback, useState } from "react";
-import { BehaviorSubject } from "rxjs";
 
 import { useAudioPlayer } from "./hooks";
 import * as styles from "./styles.css";
@@ -18,8 +17,6 @@ const initialPlayerState: PlayerState = {
   currentTime: 0,
   duration: 0,
 };
-
-const playerStateSubject = new BehaviorSubject(initialPlayerState);
 
 export const MusicPlayer = () => {
   const { isPlaying$, handleFileChange } = useAudioPlayer();
