@@ -24,7 +24,7 @@ export const MusicPlayer = () => {
   const audioElement = useRef<HTMLAudioElement>(new Audio());
   const [currentTrack, setCurrentTrack] = useState<File | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [currentTrackName, setCurrentTrackName] = useState<string>("Select Music"); // ここを追加
+  const [currentTrackName, setCurrentTrackName] = useState<string>("Select Music");
 
   useEffect(() => {
     const subscription = playerStateSubject.subscribe((state) => {
