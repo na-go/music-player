@@ -1,4 +1,3 @@
-import { useSubscription } from "observable-hooks";
 import { useCallback, useState } from "react";
 
 import { useAudioPlayer } from "./hooks";
@@ -7,8 +6,6 @@ import * as styles from "./styles.css";
 export const MusicPlayer = () => {
   const { isPlaying$, handleFileChange } = useAudioPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
-
-  useSubscription(isPlaying$, setIsPlaying);
 
   const onFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +19,7 @@ export const MusicPlayer = () => {
 
   const onButtonClick = useCallback(() => {
     isPlaying$.next(!isPlaying);
+    setIsPlaying(!isPlaying);
   }, [isPlaying, isPlaying$]);
 
   return (

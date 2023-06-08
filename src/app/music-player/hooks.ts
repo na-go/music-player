@@ -2,11 +2,11 @@ import { useCallback, useRef, useState } from "react";
 import { BehaviorSubject } from "rxjs";
 
 interface UseAudioPlayer {
-  isPlaying$: BehaviorSubject<boolean>,
-  handleFileChange: (file: File) => void
+  isPlaying$: BehaviorSubject<boolean>;
+  handleFileChange: (file: File) => void;
 }
 
-export const useAudioPlayer= ():UseAudioPlayer  => {
+export const useAudioPlayer = (): UseAudioPlayer => {
   const [_, setAudioFile] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -20,7 +20,7 @@ export const useAudioPlayer= ():UseAudioPlayer  => {
         audioRef.current.pause();
       }
     }
-  })
+  });
 
   const handleFileChange = useCallback((file: File) => {
     setAudioFile(file);
@@ -32,7 +32,6 @@ export const useAudioPlayer= ():UseAudioPlayer  => {
 
   return {
     isPlaying$,
-    handleFileChange
-  }
-
-}
+    handleFileChange,
+  };
+};
