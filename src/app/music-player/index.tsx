@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useAudioPlayer } from "./hooks";
 import * as styles from "./styles.css";
@@ -7,20 +7,28 @@ export const MusicPlayer = () => {
   const { isPlaying$, handleFileChange } = useAudioPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
 
+  useEffect(() => {
+    const subscription = isPlaying$.subscribe((playing) => setIsPlaying(playing));
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [isPlaying$]);
+
   const onFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      isPlaying$.next(false);
       const files = e.target.files;
       if (files) {
         handleFileChange(files[0]);
       }
     },
-    [handleFileChange]
+    [handleFileChange, isPlaying$]
   );
 
-  const onButtonClick = useCallback(() => {
-    isPlaying$.next(!isPlaying);
-    setIsPlaying(!isPlaying);
-  }, [isPlaying, isPlaying$]);
+  const handleTogglePlay = useCallback(() => {
+    isPlaying$.next(!isPlaying$.value);
+  }, [isPlaying$]);
 
   return (
     <div className={styles.playerContainer}>
@@ -37,7 +45,7 @@ export const MusicPlayer = () => {
         onChange={handleSeekChange}
         className={styles.seekBar}
       /> */}
-      <button onClick={onButtonClick} className={styles.playPauseButton}>
+      <button onClick={handleTogglePlay} className={styles.playPauseButton}>
         {isPlaying ? "Pause" : "Play"}
       </button>
     </div>
