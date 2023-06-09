@@ -13,7 +13,9 @@
       "@utils/*": ["src/utils/*"],
       "@theme/*": ["src/theme/*"],
       "@theme/css": ["src/theme/styles.css.ts"],
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/views/components/*"],
+      "@services/*": ["src/services/*"],
+      "@react/*": ["src/react/*"]
     }
   },
   "include": ["src", "types", "vitest-setup.ts"],

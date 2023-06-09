@@ -1,8 +1,8 @@
 import { memo } from "react";
 
+import { MusicPlayer } from "@components/music-player";
 import { ThemeProvider } from "@theme/provider";
 
-import { MusicPlayer } from "./music-player";
 import * as styles from "./styles.css";
 
 const App = () => {
