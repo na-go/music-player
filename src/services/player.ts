@@ -11,11 +11,12 @@ export interface TrackInfo {
 
 export interface MusicPlayer {
   getCurrentTrack: Observable<HTMLAudioElement | null>;
-  getCurrentTIme: () => Observable<number>;
+  getCurrentTime: () => Observable<number>;
   getIsPlaying: Observable<boolean>;
+  setTrack: (track: Track) => Observable<TrackInfo>;
   play: () => void;
   pause: () => void;
-  setTrack: (track: Track) => Observable<TrackInfo>;
+  seek: (time: number) => void;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -26,7 +27,7 @@ export const createMusicPlayer = (): MusicPlayer => {
 
   return {
     getCurrentTrack: currentTrackSubject,
-    getCurrentTIme: () => {
+    getCurrentTime: () => {
       return fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
     },
     getIsPlaying: isPlayingSubject,
@@ -56,5 +57,9 @@ export const createMusicPlayer = (): MusicPlayer => {
         )
       );
     },
+    seek: (time) => {
+      audio.currentTime = time;
+      fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime))
+    }
   };
 };

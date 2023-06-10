@@ -15,6 +15,9 @@ interface MusicPlayerState {
   play: () => void;
   pause: () => void;
   chooseTrack: (track: Track) => void;
+  seek: (time: number) => void;
+  seekMouseDown: () => void;
+  seekMouseUp: () => void;
 }
 
 export const useMusicPlayer = (): MusicPlayerState => {
@@ -24,6 +27,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
   };
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [beforeState, setBeforeState] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
@@ -37,7 +41,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
       setTrack(currentTrack);
     });
 
-    const currentTimeSubscription = player.getCurrentTIme().subscribe(setCurrentTime);
+    const currentTimeSubscription = player.getCurrentTime().subscribe(setCurrentTime);
 
     return () => {
       subscription.unsubscribe();
@@ -65,5 +69,23 @@ export const useMusicPlayer = (): MusicPlayerState => {
     }
   };
 
-  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack };
+  const seek = (time: number) => {
+    if (musicPlayer) {
+      musicPlayer.seek(time);
+    }
+  };
+
+  const seekMouseDown = () => {
+    if (musicPlayer) {
+      musicPlayer.pause();
+    }
+  }
+
+  const seekMouseUp = () => {
+    if (musicPlayer) {
+      musicPlayer.play();
+    }
+  }
+
+  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack, seek, seekMouseDown, seekMouseUp  };
 };

@@ -6,7 +6,7 @@ import { translateNumberToDate } from "@utils/translate-number-to-date";
 import * as styles from "./styles.css";
 
 export const MusicPlayer = () => {
-  const { currentTrack, currentTime, isPlaying, currentTrackInfo, play, pause, chooseTrack } = useMusicPlayer();
+  const { currentTrack, currentTime, isPlaying, currentTrackInfo, play, pause, chooseTrack, seek, seekMouseDown, seekMouseUp } = useMusicPlayer();
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
@@ -16,14 +16,24 @@ export const MusicPlayer = () => {
     [chooseTrack]
   );
 
-  const handleSeekChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const seekTo = Number(event.target.value);
-  }, []);
+  const handleSeek = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const seekTo = parseInt(event.target.value, 10);
+    if (Number.isNaN(seekTo)) return;
+    seek(seekTo);
+  }, [seek]);
+
+  const handleSeekMouseUp = useCallback(() => {
+    seekMouseUp();
+  }, [seekMouseUp]);
+
+  const handleSeekMouseDown = useCallback(() => {
+    seekMouseDown();
+  }, [seekMouseDown]);
 
   return (
     <div className={styles.playerContainer}>
       <label htmlFor="music-file" className={styles.fileInputLabel}>
-        Choose a music file
+        楽曲ファイルを選択してね
       </label>
       <label id="music-info" className={styles.musicInfo}>
         <span>{currentTrackInfo.title}</span>
@@ -39,8 +49,10 @@ export const MusicPlayer = () => {
         min={0}
         max={currentTrackInfo.duration}
         value={currentTime}
-        onChange={handleSeekChange} // TODO: 再生時間を変更する関数を入れるhandleSeekChange
         className={styles.seekBar}
+        onChange={handleSeek}
+        onMouseDown={handleSeekMouseDown}
+        onMouseUp={handleSeekMouseUp}
       />
       {currentTrack ? (
         <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
