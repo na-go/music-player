@@ -13,7 +13,7 @@
       "@utils/*": ["src/utils/*"],
       "@theme/*": ["src/theme/*"],
       "@theme/css": ["src/theme/styles.css.ts"],
-      "@components/*": ["src/views/components/*"],
+      "@components/*": ["src/components/*"],
       "@services/*": ["src/services/*"],
       "@react/*": ["src/react/*"]
     }
