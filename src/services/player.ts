@@ -7,8 +7,8 @@ export interface Track {
 export interface MusicPlayer {
   getCurrentTrack: Observable<Track | null>;
   getIsPlaying: Observable<boolean>;
-  playTrack: (track: Track) => void;
-  pauseTrack: () => void;
+  play: (track: Track) => void;
+  pause: () => void;
 	setTrack: (track: Track) => void;
 }
 
@@ -19,9 +19,9 @@ export const createMusicPlayer = (): MusicPlayer => {
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
 
   return {
-    getCurrentTrack: currentTrackSubject.asObservable(),
-    getIsPlaying: isPlayingSubject.asObservable(),
-    playTrack: (track) => {
+    getCurrentTrack: currentTrackSubject,
+    getIsPlaying: isPlayingSubject,
+    play: (track) => {
       const url = URL.createObjectURL(track.file);
       audioElement.src = url;
       void audioElement.play().then(() => {
@@ -29,12 +29,12 @@ export const createMusicPlayer = (): MusicPlayer => {
         isPlayingSubject.next(true);
       });
     },
-    pauseTrack: () => {
+    pause: () => {
       audioElement.pause();
       isPlayingSubject.next(false);
     },
 		setTrack: (track) => {
 			currentTrackSubject.next({ file: track.file });
-		}
+		},
   };
 };
