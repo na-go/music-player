@@ -43,7 +43,7 @@ export const MusicPlayer = () => {
         type="range"
         min={0}
         max={currentTrackInfo?.duration ?? 0}
-        value={0} // TODO: 現在再生時間currentTimeを入れる
+        value={currentTime}
         onChange={handleSeekChange} // TODO: 再生時間を変更する関数を入れるhandleSeekChange
         className={styles.seekBar}
       />
