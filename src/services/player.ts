@@ -13,10 +13,12 @@ export interface MusicPlayer {
   getCurrentTrack: Observable<HTMLAudioElement | null>;
   getCurrentTime: () => Observable<number>;
   getIsPlaying: Observable<boolean>;
+  getVolume: Observable<number>;
   setTrack: (track: Track) => Observable<TrackInfo>;
   play: () => void;
   pause: () => void;
   seek: (time: number) => void;
+  setVolume: (volume: number) => void;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -24,12 +26,14 @@ export const createMusicPlayer = (): MusicPlayer => {
 
   const currentTrackSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
+  const volumeSubject = new BehaviorSubject<number>(1);
 
   return {
     getCurrentTrack: currentTrackSubject,
     getCurrentTime: () => {
       return fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
     },
+    getVolume: volumeSubject,
     getIsPlaying: isPlayingSubject,
     play: async () => {
       await audio.play();
@@ -60,6 +64,11 @@ export const createMusicPlayer = (): MusicPlayer => {
     seek: (time) => {
       audio.currentTime = time;
       fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime))
+    },
+    setVolume: (volume) => {
+      audio.volume = volume;
+      fromEvent(audio, "volumechange").pipe(map(() => audio.volume))
+      volumeSubject.next(audio.volume);
     }
   };
 };

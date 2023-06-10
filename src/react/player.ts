@@ -12,12 +12,14 @@ interface MusicPlayerState {
   currentTime: number;
   currentTrackInfo: TrackInfo;
   isPlaying: boolean;
+  currentVolume: number;
   play: () => void;
   pause: () => void;
   chooseTrack: (track: Track) => void;
   seek: (time: number) => void;
   seekMouseDown: () => void;
   seekMouseUp: () => void;
+  volume: (volume: number) => void
 }
 
 export const useMusicPlayer = (): MusicPlayerState => {
@@ -26,8 +28,10 @@ export const useMusicPlayer = (): MusicPlayerState => {
     duration: 0,
   };
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [beforeIsPlaying, setBeforeIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [currentVolume, setCurrentVolume] = useState(1);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
 
@@ -39,6 +43,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     const trackSubscription = player.getCurrentTrack.pipe(distinctUntilChanged()).subscribe((currentTrack) => {
       setTrack(currentTrack);
     });
+    const volumeSubscription = player.getVolume.subscribe(setCurrentVolume);
 
     const currentTimeSubscription = player.getCurrentTime().subscribe(setCurrentTime);
 
@@ -47,6 +52,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
       trackSubscription.unsubscribe();
       player.pause();
       currentTimeSubscription.unsubscribe();
+      volumeSubscription.unsubscribe();
     };
   }, []);
 
@@ -76,15 +82,22 @@ export const useMusicPlayer = (): MusicPlayerState => {
 
   const seekMouseDown = () => {
     if (musicPlayer) {
+      setBeforeIsPlaying(isPlaying);
       musicPlayer.pause();
     }
   }
 
   const seekMouseUp = () => {
     if (musicPlayer) {
-      musicPlayer.play();
+      if(beforeIsPlaying) musicPlayer.play();
     }
   }
 
-  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack, seek, seekMouseDown, seekMouseUp  };
+  const volume = (volume: number) => {
+    if (musicPlayer) {
+      musicPlayer.setVolume(volume);
+    }
+  }
+
+  return { currentTrack: track, currentTime, currentVolume, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack, seek, seekMouseDown, seekMouseUp, volume };
 };
