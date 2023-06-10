@@ -24,25 +24,19 @@ export const MusicPlayer = () => {
       <label htmlFor="music-file" className={styles.fileInputLabel}>
         Choose a music file
       </label>
-      {currentTrackInfo ? (
         <label id="music-info" className={styles.musicInfo}>
           <span>{currentTrackInfo.title}</span>
         </label>
-      ): null}
-      {currentTrackInfo ? (
         <label id="music-info" className={styles.musicInfo}>
           <span>{translateNumberToDate(currentTime)} / {translateNumberToDate(currentTrackInfo.duration)}</span>
         </label>
-      ): <label id="music-info" className={styles.musicInfo}>
-          <span>{translateNumberToDate(currentTime)} / {translateNumberToDate(0)}</span>
-        </label>}
       <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
       {/* TODO: 現在再生時間の表示 */}
       {/* TODO: 再生時間のシークバー */}
       <input
         type="range"
         min={0}
-        max={currentTrackInfo?.duration ?? 0}
+        max={currentTrackInfo.duration}
         value={currentTime}
         onChange={handleSeekChange} // TODO: 再生時間を変更する関数を入れるhandleSeekChange
         className={styles.seekBar}

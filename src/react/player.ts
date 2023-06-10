@@ -10,7 +10,7 @@ import type { MusicPlayer, Track, TrackInfo } from "@services/player";
 interface MusicPlayerState {
   currentTrack: HTMLAudioElement | null;
   currentTime: number;
-  currentTrackInfo: TrackInfo | null;
+  currentTrackInfo: TrackInfo;
   isPlaying: boolean;
   play: () => void;
   pause: () => void;
@@ -18,12 +18,15 @@ interface MusicPlayerState {
 }
 
 export const useMusicPlayer = (): MusicPlayerState => {
-  // TODO: RxJSで実装する
+  const initialTrackInfo: TrackInfo = {
+    title: "",
+    duration: 0,
+  }
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
-  const [trackInfo, setTrackInfo] = useState<TrackInfo | null>(null);
+  const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
 
   useEffect(() => {
     const player = createMusicPlayer();
