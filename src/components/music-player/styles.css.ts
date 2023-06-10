@@ -69,4 +69,3 @@ export const musicInfo = style({
   justifyContent: "center",
   gap: "8px",
 });
-

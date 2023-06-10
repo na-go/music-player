@@ -21,7 +21,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
   const initialTrackInfo: TrackInfo = {
     title: "",
     duration: 0,
-  }
+  };
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -33,9 +33,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     setMusicPlayer(player);
 
     const subscription = player.getIsPlaying.subscribe(setIsPlaying);
-    const trackSubscription = player.getCurrentTrack.pipe(
-      distinctUntilChanged(),
-    ).subscribe((currentTrack) => {
+    const trackSubscription = player.getCurrentTrack.pipe(distinctUntilChanged()).subscribe((currentTrack) => {
       setTrack(currentTrack);
     });
 
@@ -67,5 +65,5 @@ export const useMusicPlayer = (): MusicPlayerState => {
     }
   };
 
-  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo:trackInfo ,play, pause, chooseTrack };
+  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack };
 };

@@ -15,7 +15,7 @@ export interface MusicPlayer {
   getIsPlaying: Observable<boolean>;
   play: () => void;
   pause: () => void;
-	setTrack: (track: Track) => Observable<TrackInfo>;
+  setTrack: (track: Track) => Observable<TrackInfo>;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -27,34 +27,34 @@ export const createMusicPlayer = (): MusicPlayer => {
   return {
     getCurrentTrack: currentTrackSubject,
     getCurrentTIme: () => {
-      return fromEvent(audio, "timeupdate").pipe(
-        map(() => audio.currentTime),
-      );
+      return fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
     },
     getIsPlaying: isPlayingSubject,
     play: async () => {
-      await audio.play()
+      await audio.play();
       isPlayingSubject.next(true);
     },
     pause: () => {
       audio.pause();
       isPlayingSubject.next(false);
     },
-		setTrack: (track) => {
+    setTrack: (track) => {
       const url = URL.createObjectURL(track.file);
       audio.src = url;
-			currentTrackSubject.next(audio);
+      currentTrackSubject.next(audio);
       isPlayingSubject.next(false);
 
       return currentTrackSubject.pipe(
-      switchMap(() => fromEvent(audio, "loadedmetadata").pipe(
-        take(1),
-        map(() => ({
-          title: track.file.name,
-          duration: audio.duration,
-        }))
-      ))
-    )
-		},
+        switchMap(() =>
+          fromEvent(audio, "loadedmetadata").pipe(
+            take(1),
+            map(() => ({
+              title: track.file.name,
+              duration: audio.duration,
+            }))
+          )
+        )
+      );
+    },
   };
 };

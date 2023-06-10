@@ -5,15 +5,16 @@ import { translateNumberToDate } from "@utils/translate-number-to-date";
 
 import * as styles from "./styles.css";
 
-
 export const MusicPlayer = () => {
-
-  const { currentTrack, currentTime, isPlaying, currentTrackInfo ,play, pause, chooseTrack } = useMusicPlayer();
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.item(0);
-    if (!file) return;
-    chooseTrack({ file });
-  }, [chooseTrack]);
+  const { currentTrack, currentTime, isPlaying, currentTrackInfo, play, pause, chooseTrack } = useMusicPlayer();
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.item(0);
+      if (!file) return;
+      chooseTrack({ file });
+    },
+    [chooseTrack]
+  );
 
   const handleSeekChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const seekTo = Number(event.target.value);
@@ -24,12 +25,14 @@ export const MusicPlayer = () => {
       <label htmlFor="music-file" className={styles.fileInputLabel}>
         Choose a music file
       </label>
-        <label id="music-info" className={styles.musicInfo}>
-          <span>{currentTrackInfo.title}</span>
-        </label>
-        <label id="music-info" className={styles.musicInfo}>
-          <span>{translateNumberToDate(currentTime)} / {translateNumberToDate(currentTrackInfo.duration)}</span>
-        </label>
+      <label id="music-info" className={styles.musicInfo}>
+        <span>{currentTrackInfo.title}</span>
+      </label>
+      <label id="music-info" className={styles.musicInfo}>
+        <span>
+          {translateNumberToDate(currentTime)} / {translateNumberToDate(currentTrackInfo.duration)}
+        </span>
+      </label>
       <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
       <input
         type="range"
@@ -41,7 +44,7 @@ export const MusicPlayer = () => {
       />
       {currentTrack ? (
         <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
-          {isPlaying ? 'Stop' : 'Play'}
+          {isPlaying ? "Stop" : "Play"}
         </button>
       ) : (
         <p>No track selected</p>
