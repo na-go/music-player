@@ -27,7 +27,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
   };
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [beforeState, setBeforeState] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
