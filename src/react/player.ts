@@ -31,19 +31,19 @@ export const useMusicPlayer = (): MusicPlayerState => {
     return () => {
       subscription.unsubscribe();
       trackSubscription.unsubscribe();
-      player.pauseTrack();
+      player.pause();
     };
   }, []);
 
   const play = () => {
     if (musicPlayer && track) {
-      musicPlayer.playTrack(track);
+      musicPlayer.play(track);
     }
   };
 
   const pause = () => {
     if (musicPlayer) {
-      musicPlayer.pauseTrack();
+      musicPlayer.pause();
     }
   };
 
