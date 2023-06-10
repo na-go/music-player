@@ -35,6 +35,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
 
+  // TODO: シングルトンパターンを読んでリファクタリングする
   useEffect(() => {
     const player = createMusicPlayer();
     setMusicPlayer(player);
