@@ -15,7 +15,7 @@ export interface MusicPlayer {
   getIsPlaying: Observable<boolean>;
   getVolume: Observable<number>;
   setTrack: (track: Track) => Observable<TrackInfo>;
-  play: () => void;
+  play: () => Promise<void>;
   pause: () => void;
   seek: (time: number) => void;
   setVolume: (volume: number) => void;

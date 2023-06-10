@@ -13,12 +13,12 @@ interface MusicPlayerState {
   currentTrackInfo: TrackInfo;
   isPlaying: boolean;
   currentVolume: number;
-  play: () => void;
+  play: () => Promise<void>;
   pause: () => void;
   chooseTrack: (track: Track) => void;
   seek: (time: number) => void;
   seekMouseDown: () => void;
-  seekMouseUp: () => void;
+  seekMouseUp: () => Promise<void>;
   volume: (volume: number) => void
 }
 
@@ -56,9 +56,9 @@ export const useMusicPlayer = (): MusicPlayerState => {
     };
   }, []);
 
-  const play = () => {
+  const play = async () => {
     if (musicPlayer && track) {
-      musicPlayer.play();
+      await musicPlayer.play();
     }
   };
 
@@ -87,9 +87,9 @@ export const useMusicPlayer = (): MusicPlayerState => {
     }
   }
 
-  const seekMouseUp = () => {
+  const seekMouseUp = async () => {
     if (musicPlayer) {
-      if(beforeIsPlaying) musicPlayer.play();
+      if(beforeIsPlaying) await musicPlayer.play();
     }
   }
 

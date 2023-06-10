@@ -22,8 +22,8 @@ export const MusicPlayer = () => {
     seek(seekTo);
   }, [seek]);
 
-  const handleSeekMouseUp = useCallback(() => {
-    seekMouseUp();
+  const handleSeekMouseUp = useCallback(async () => {
+    await seekMouseUp();
   }, [seekMouseUp]);
 
   const handleSeekMouseDown = useCallback(() => {
