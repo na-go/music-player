@@ -1,40 +1,60 @@
-import { BehaviorSubject, type Observable } from "rxjs";
+import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map } from "rxjs";
 
 export interface Track {
   file: Blob;
 }
 
+export interface TrackInfo {
+  title: string;
+  duration: number;
+}
+
 export interface MusicPlayer {
-  getCurrentTrack: Observable<Track | null>;
+  getCurrentTrack: Observable<HTMLAudioElement | null>;
+  getCurrentTIme: () => Observable<number>;
   getIsPlaying: Observable<boolean>;
-  play: (track: Track) => void;
+  play: () => void;
   pause: () => void;
-	setTrack: (track: Track) => void;
+	setTrack: (track: Track) => Observable<TrackInfo>;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
-  const audioElement = new Audio();
+  const audio = new Audio();
 
-  const currentTrackSubject = new BehaviorSubject<Track | null>(null);
+  const currentTrackSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
 
   return {
     getCurrentTrack: currentTrackSubject,
+    getCurrentTIme: () => {
+      return fromEvent(audio, "timeupdate").pipe(
+        map(() => audio.currentTime),
+      );
+    },
     getIsPlaying: isPlayingSubject,
-    play: (track) => {
-      const url = URL.createObjectURL(track.file);
-      audioElement.src = url;
-      void audioElement.play().then(() => {
-        currentTrackSubject.next(track);
-        isPlayingSubject.next(true);
-      });
+    play: async () => {
+      await audio.play()
+      isPlayingSubject.next(true);
     },
     pause: () => {
-      audioElement.pause();
+      audio.pause();
       isPlayingSubject.next(false);
     },
 		setTrack: (track) => {
-			currentTrackSubject.next({ file: track.file });
+      const url = URL.createObjectURL(track.file);
+      audio.src = url;
+			currentTrackSubject.next(audio);
+      isPlayingSubject.next(false);
+
+      return currentTrackSubject.pipe(
+      switchMap(() => fromEvent(audio, "loadedmetadata").pipe(
+        take(1),
+        map(() => ({
+          title: track.file.name,
+          duration: audio.duration,
+        }))
+      ))
+    )
 		},
   };
 };

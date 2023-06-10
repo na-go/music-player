@@ -61,3 +61,12 @@ export const seekBar = style({
   width: "80%",
   cursor: "pointer",
 });
+
+export const musicInfo = style({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px",
+});
+

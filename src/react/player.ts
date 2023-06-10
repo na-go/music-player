@@ -1,13 +1,16 @@
 // src/react/player.ts
 
 import { useEffect, useState } from "react";
+import { distinctUntilChanged } from "rxjs";
 
 import { createMusicPlayer } from "@services/player";
 
-import type { MusicPlayer, Track } from "@services/player";
+import type { MusicPlayer, Track, TrackInfo } from "@services/player";
 
 interface MusicPlayerState {
-  currentTrack: Track | null;
+  currentTrack: HTMLAudioElement | null;
+  currentTime: number;
+  currentTrackInfo: TrackInfo | null;
   isPlaying: boolean;
   play: () => void;
   pause: () => void;
@@ -18,26 +21,34 @@ export const useMusicPlayer = (): MusicPlayerState => {
   // TODO: RxJSで実装する
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [track, setTrack] = useState<Track | null>(null);
-
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [track, setTrack] = useState<HTMLAudioElement | null>(null);
+  const [trackInfo, setTrackInfo] = useState<TrackInfo | null>(null);
 
   useEffect(() => {
     const player = createMusicPlayer();
     setMusicPlayer(player);
 
     const subscription = player.getIsPlaying.subscribe(setIsPlaying);
-    const trackSubscription = player.getCurrentTrack.subscribe(setTrack);
+    const trackSubscription = player.getCurrentTrack.pipe(
+      distinctUntilChanged(),
+    ).subscribe((currentTrack) => {
+      setTrack(currentTrack);
+    });
+
+    const currentTimeSubscription = player.getCurrentTIme().subscribe(setCurrentTime);
 
     return () => {
       subscription.unsubscribe();
       trackSubscription.unsubscribe();
       player.pause();
+      currentTimeSubscription.unsubscribe();
     };
   }, []);
 
   const play = () => {
     if (musicPlayer && track) {
-      musicPlayer.play(track);
+      musicPlayer.play();
     }
   };
 
@@ -49,9 +60,9 @@ export const useMusicPlayer = (): MusicPlayerState => {
 
   const chooseTrack = (track: Track) => {
     if (musicPlayer) {
-      musicPlayer.setTrack(track);
+      musicPlayer.setTrack(track).subscribe(setTrackInfo);
     }
   };
 
-  return { currentTrack: track, isPlaying, play, pause, chooseTrack };
+  return { currentTrack: track, currentTime, isPlaying, currentTrackInfo:trackInfo ,play, pause, chooseTrack };
 };
