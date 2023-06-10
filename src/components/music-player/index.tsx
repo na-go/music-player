@@ -31,8 +31,6 @@ export const MusicPlayer = () => {
           <span>{translateNumberToDate(currentTime)} / {translateNumberToDate(currentTrackInfo.duration)}</span>
         </label>
       <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
-      {/* TODO: 現在再生時間の表示 */}
-      {/* TODO: 再生時間のシークバー */}
       <input
         type="range"
         min={0}
