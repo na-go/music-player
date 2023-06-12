@@ -1,4 +1,4 @@
-import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map } from "rxjs";
+import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map, filter } from "rxjs";
 
 export interface Track {
   file: Blob;
@@ -61,6 +61,7 @@ export const createMusicPlayer = (): MusicPlayer => {
       fromEvent(audio, "loadedmetadata")
         .pipe(
           take(1),
+          filter(() => tracksSubject.value.every((trackInfo) => trackInfo.file.name !== track.file.name)),
           map(() => ({
             file: track.file,
             url,
