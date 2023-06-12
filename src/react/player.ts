@@ -14,6 +14,7 @@ interface MusicPlayerState {
   isPlaying: boolean;
   isRepeat: boolean;
   currentVolume: number;
+  tracks: TrackInfo[];
   play: () => Promise<void>;
   pause: () => void;
   setTrack: (track: Blob) => void;

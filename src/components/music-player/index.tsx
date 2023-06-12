@@ -9,7 +9,33 @@ import { translateNumberToDate } from "@utils/translate-number-to-date";
 
 import * as styles from "./styles.css";
 
-export const MusicPlayer = () => {
+import type { TrackInfo } from "@services/player";
+import type { FC } from "react";
+
+interface TracksListProps {
+  trackInfos: TrackInfo[];
+  currentTrackInfo: TrackInfo;
+  setTrack: (track: Blob) => void;
+}
+
+const TracksList: FC<TracksListProps> = ({ trackInfos, currentTrackInfo, setTrack }) => {
+  return (
+    <>
+      <div>再生リスト</div>
+      <div>現在の曲: {currentTrackInfo.title}</div>
+      <ul>
+        {trackInfos.map((trackInfo) => (
+          <li key={trackInfo.id}>
+            <button onClick={handleSetTrack}>{trackInfo.title}</button>
+            {trackInfo.id === currentTrackInfo.id && <span>Now Playing</span>}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+export const MusicPlayer:FC = () => {
   const {
     currentTrack,
     currentTime,
@@ -114,6 +140,7 @@ export const MusicPlayer = () => {
           )}
         </button>
       </div>
+      <TracksList trackInfos={tracks} currentTrackInfo={currentTrackInfo} setTrack={setTrack} />
     </div>
   );
 };

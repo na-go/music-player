@@ -1,6 +1,11 @@
 import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map } from "rxjs";
 
-export interface TrackInfo {
+export interface Track {
+  file: Blob;
+}
+
+export interface TrackInfo extends Track {
+  id: string;
   title: string;
   duration: number;
 }
@@ -11,7 +16,9 @@ export interface MusicPlayer {
   getIsPlaying: Observable<boolean>;
   getVolume: Observable<number>;
   getIsLoop: Observable<boolean>;
-  setTrack: (track: Blob) => Observable<TrackInfo>;
+  getTracks: Observable<TrackInfo[]>;
+  saveTrack: (track: TrackInfo) => void;
+  setTrack: (file: Blob) => Observable<TrackInfo>;
   play: () => Promise<void>;
   pause: () => void;
   seek: (time: number) => void;
