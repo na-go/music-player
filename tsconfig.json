@@ -15,7 +15,8 @@
       "@theme/css": ["src/theme/styles.css.ts"],
       "@components/*": ["src/components/*"],
       "@services/*": ["src/services/*"],
-      "@react/*": ["src/react/*"]
+      "@react/*": ["src/react/*"],
+      "@assets/*": ["src/assets/*"],
     }
   },
   "include": ["src", "types", "vitest-setup.ts"],
