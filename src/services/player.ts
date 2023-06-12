@@ -10,11 +10,13 @@ export interface MusicPlayer {
   getCurrentTime: () => Observable<number>;
   getIsPlaying: Observable<boolean>;
   getVolume: Observable<number>;
+  getIsLoop: Observable<boolean>;
   setTrack: (track: Blob) => Observable<TrackInfo>;
   play: () => Promise<void>;
   pause: () => void;
   seek: (time: number) => void;
   setVolume: (volume: number) => void;
+  toggleRepeat: () => void;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -22,6 +24,7 @@ export const createMusicPlayer = (): MusicPlayer => {
 
   const currentTrackSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
+  const isLoopSubject = new BehaviorSubject<boolean>(false);
   const volumeSubject = new BehaviorSubject<number>(1);
 
   return {
@@ -31,6 +34,7 @@ export const createMusicPlayer = (): MusicPlayer => {
     },
     getVolume: volumeSubject,
     getIsPlaying: isPlayingSubject,
+    getIsLoop: isLoopSubject,
     play: async () => {
       await audio.play();
       isPlayingSubject.next(true);
@@ -59,12 +63,17 @@ export const createMusicPlayer = (): MusicPlayer => {
     },
     seek: (time) => {
       audio.currentTime = time;
-      fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime))
+      fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
     },
     setVolume: (volume) => {
       audio.volume = volume;
-      fromEvent(audio, "volumechange").pipe(map(() => audio.volume))
+      fromEvent(audio, "volumechange").pipe(map(() => audio.volume));
       volumeSubject.next(audio.volume);
-    }
+    },
+    toggleRepeat: () => {
+      audio.loop = !audio.loop;
+      fromEvent(audio, "loop").pipe(map(() => audio.loop));
+      isLoopSubject.next(audio.loop);
+    },
   };
 };

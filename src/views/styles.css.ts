@@ -28,6 +28,5 @@ export const main = style({
 
 export const footer = style({
   height: footerSize,
-  display: "flex",
   alignItems: "center",
 });
