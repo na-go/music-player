@@ -1,11 +1,12 @@
 import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map } from "rxjs";
 
+
 export interface Track {
   file: Blob;
 }
 
-export interface TrackInfo extends Track {
-  id: string;
+export interface TrackInfo {
+  url: string;
   title: string;
   duration: number;
 }
@@ -17,7 +18,7 @@ export interface MusicPlayer {
   getVolume: Observable<number>;
   getIsLoop: Observable<boolean>;
   getTracks: Observable<TrackInfo[]>;
-  saveTrack: (track: TrackInfo) => void;
+  saveTrack: (track: Track) => void;
   setTrack: (file: Blob) => Observable<TrackInfo>;
   play: () => Promise<void>;
   pause: () => void;
@@ -33,6 +34,7 @@ export const createMusicPlayer = (): MusicPlayer => {
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
   const isLoopSubject = new BehaviorSubject<boolean>(false);
   const volumeSubject = new BehaviorSubject<number>(1);
+  const tracksSubject = new BehaviorSubject<TrackInfo[]>([]);
 
   return {
     getCurrentTrack: currentTrackSubject,
@@ -42,6 +44,7 @@ export const createMusicPlayer = (): MusicPlayer => {
     getVolume: volumeSubject,
     getIsPlaying: isPlayingSubject,
     getIsLoop: isLoopSubject,
+    getTracks: tracksSubject,
     play: async () => {
       await audio.play();
       isPlayingSubject.next(true);
@@ -49,6 +52,23 @@ export const createMusicPlayer = (): MusicPlayer => {
     pause: () => {
       audio.pause();
       isPlayingSubject.next(false);
+    },
+    saveTrack: (track) => {
+      const url = URL.createObjectURL(track.file);
+      audio.src = url;
+      currentTrackSubject.next(audio);
+      isPlayingSubject.next(false);
+
+      fromEvent(audio, "loadedmetadata").pipe(
+        take(1),
+        map(() => ({
+          url,
+          title: track.file.name,
+          duration: audio.duration,
+        }))
+      ).subscribe(trackInfo => {
+        tracksSubject.next([...tracksSubject.value, trackInfo]);
+      });
     },
     setTrack: (track) => {
       const url = URL.createObjectURL(track);
@@ -61,6 +81,7 @@ export const createMusicPlayer = (): MusicPlayer => {
           fromEvent(audio, "loadedmetadata").pipe(
             take(1),
             map(() => ({
+              url,
               title: track.name,
               duration: audio.duration,
             }))

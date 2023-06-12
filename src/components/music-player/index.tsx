@@ -13,21 +13,24 @@ import type { TrackInfo } from "@services/player";
 import type { FC } from "react";
 
 interface TracksListProps {
+  isPlaying:boolean
   trackInfos: TrackInfo[];
   currentTrackInfo: TrackInfo;
   setTrack: (track: Blob) => void;
 }
 
-const TracksList: FC<TracksListProps> = ({ trackInfos, currentTrackInfo, setTrack }) => {
+const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
+
   return (
     <>
       <div>再生リスト</div>
-      <div>現在の曲: {currentTrackInfo.title}</div>
       <ul>
         {trackInfos.map((trackInfo) => (
-          <li key={trackInfo.id}>
-            <button onClick={handleSetTrack}>{trackInfo.title}</button>
-            {trackInfo.id === currentTrackInfo.id && <span>Now Playing</span>}
+          <li key={trackInfo.url}>
+            {/* <button onClick={handleSetTrack}>{trackInfo.title}</button> */}
+            {trackInfo.title}
+            {!isPlaying && trackInfo.title === currentTrackInfo.title && <span>currently selected</span>}
+            {(isPlaying && trackInfo.title === currentTrackInfo.title) ? <span>Now Playing</span> : null}
           </li>
         ))}
       </ul>
@@ -42,6 +45,7 @@ export const MusicPlayer:FC = () => {
     currentVolume,
     isPlaying,
     isRepeat,
+    tracks,
     currentTrackInfo,
     play,
     pause,
@@ -51,14 +55,15 @@ export const MusicPlayer:FC = () => {
     seekMouseUp,
     volume,
     toggleRepeat: repeat,
+    registerTrack,
   } = useMusicPlayer();
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
       if (!file) return;
-      setTrack(file);
+      registerTrack({ file });
     },
-    [setTrack]
+    [registerTrack]
   );
 
   const handleSeek = useCallback(
@@ -140,7 +145,7 @@ export const MusicPlayer:FC = () => {
           )}
         </button>
       </div>
-      <TracksList trackInfos={tracks} currentTrackInfo={currentTrackInfo} setTrack={setTrack} />
+      <TracksList isPlaying={isPlaying} trackInfos={tracks} currentTrackInfo={currentTrackInfo} setTrack={setTrack} />
     </div>
   );
 };

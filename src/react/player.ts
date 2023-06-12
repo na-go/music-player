@@ -5,7 +5,7 @@ import { distinctUntilChanged } from "rxjs";
 
 import { createMusicPlayer } from "@services/player";
 
-import type { MusicPlayer, TrackInfo } from "@services/player";
+import type { MusicPlayer, Track, TrackInfo } from "@services/player";
 
 interface MusicPlayerState {
   currentTrack: HTMLAudioElement | null;
@@ -23,6 +23,7 @@ interface MusicPlayerState {
   seekMouseUp: () => Promise<void>;
   volume: (volume: number) => void;
   toggleRepeat: () => void;
+  registerTrack: (track: Track) => void;
 }
 
 let player: MusicPlayer | null = null;
@@ -38,6 +39,7 @@ const createSingletonPlayer = (): MusicPlayer => {
 export const useMusicPlayer = (): MusicPlayerState => {
   const initialTrackInfo: TrackInfo = useMemo(
     () => ({
+      url: "",
       title: "",
       duration: 0,
     }),
@@ -53,8 +55,10 @@ export const useMusicPlayer = (): MusicPlayerState => {
   const [currentVolume, setCurrentVolume] = useState(1);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
+  const [tracks, setTracks] = useState<TrackInfo[]>([]);
 
   useEffect(() => {
+    const tracksSubscription = musicPlayer.getTracks.subscribe(setTracks);
     const isPlayingSubscription = musicPlayer.getIsPlaying.pipe(distinctUntilChanged()).subscribe(setIsPlaying);
     const trackSubscription = musicPlayer.getCurrentTrack.pipe(distinctUntilChanged()).subscribe(setTrack);
     const volumeSubscription = musicPlayer.getVolume.pipe(distinctUntilChanged()).subscribe(setCurrentVolume);
@@ -62,6 +66,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     const isLoopSubscription = musicPlayer.getIsLoop.pipe(distinctUntilChanged()).subscribe(setIsRepeat);
 
     return () => {
+      tracksSubscription.unsubscribe();
       isPlayingSubscription.unsubscribe();
       trackSubscription.unsubscribe();
       currentTimeSubscription.unsubscribe();
@@ -105,12 +110,18 @@ export const useMusicPlayer = (): MusicPlayerState => {
     musicPlayer.toggleRepeat();
   };
 
+  const registerTrack = (track: Track) => {
+    musicPlayer.setTrack(track.file).subscribe(setTrackInfo);
+    musicPlayer.saveTrack(track);
+  };
+
   return {
     currentTrack: track,
     currentTime,
     currentVolume,
     isPlaying,
     isRepeat,
+    tracks,
     currentTrackInfo: trackInfo,
     play,
     pause,
@@ -120,5 +131,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
     seekMouseUp,
     volume,
     toggleRepeat,
+    registerTrack,
   };
 };
