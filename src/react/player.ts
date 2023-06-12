@@ -22,7 +22,7 @@ interface MusicPlayerState {
   seekMouseDown: () => void;
   seekMouseUp: () => Promise<void>;
   volume: (volume: number) => void;
-  toggleRepeat: () => void;
+  toggleRepeatOnce: () => void;
   registerTrack: (track: Track) => void;
 }
 
@@ -107,8 +107,8 @@ export const useMusicPlayer = (): MusicPlayerState => {
     musicPlayer.setVolume(volume);
   };
 
-  const toggleRepeat = () => {
-    musicPlayer.toggleRepeat();
+  const toggleRepeatOnce = () => {
+    musicPlayer.toggleRepeatOnce();
   };
 
   const registerTrack = (track: Track) => {
@@ -131,7 +131,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     seekMouseDown,
     seekMouseUp,
     volume,
-    toggleRepeat,
+    toggleRepeatOnce,
     registerTrack,
   };
 };

@@ -23,7 +23,7 @@ export interface MusicPlayer {
   pause: () => void;
   seek: (time: number) => void;
   setVolume: (volume: number) => void;
-  toggleRepeat: () => void;
+  toggleRepeatOnce: () => void;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -101,7 +101,7 @@ export const createMusicPlayer = (): MusicPlayer => {
       fromEvent(audio, "volumechange").pipe(map(() => audio.volume));
       volumeSubject.next(audio.volume);
     },
-    toggleRepeat: () => {
+    toggleRepeatOnce: () => {
       audio.loop = !audio.loop;
       fromEvent(audio, "loop").pipe(map(() => audio.loop));
       isLoopSubject.next(audio.loop);

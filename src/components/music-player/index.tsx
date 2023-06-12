@@ -68,7 +68,7 @@ export const MusicPlayer: FC = () => {
     seekMouseDown,
     seekMouseUp,
     volume,
-    toggleRepeat: repeat,
+    toggleRepeatOnce,
     registerTrack,
   } = useMusicPlayer();
   const handleFileChange = useCallback(
@@ -151,7 +151,7 @@ export const MusicPlayer: FC = () => {
         <img className={styles.volumeIcon} src={volumeUp} alt="volume-down" />
       </div>
       <div className={styles.optionContainer}>
-        <button onClick={repeat} className={styles.repeatButton}>
+        <button onClick={toggleRepeatOnce} className={styles.repeatButton}>
           {isRepeat ? (
             <img className={styles.repeatIcon} src={repeatOnOnce} alt="repeat" />
           ) : (
