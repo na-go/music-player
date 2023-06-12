@@ -1,6 +1,5 @@
 import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map } from "rxjs";
 
-
 export interface Track {
   file: Blob;
 }
@@ -59,17 +58,19 @@ export const createMusicPlayer = (): MusicPlayer => {
       currentTrackSubject.next(audio);
       isPlayingSubject.next(false);
 
-      fromEvent(audio, "loadedmetadata").pipe(
-        take(1),
-        map(() => ({
-          file: track.file,
-          url,
-          title: track.file.name,
-          duration: audio.duration,
-        }))
-      ).subscribe(trackInfo => {
-        tracksSubject.next([...tracksSubject.value, trackInfo]);
-      });
+      fromEvent(audio, "loadedmetadata")
+        .pipe(
+          take(1),
+          map(() => ({
+            file: track.file,
+            url,
+            title: track.file.name,
+            duration: audio.duration,
+          }))
+        )
+        .subscribe((trackInfo) => {
+          tracksSubject.next([...tracksSubject.value, trackInfo]);
+        });
     },
     setTrack: (track) => {
       const url = URL.createObjectURL(track);

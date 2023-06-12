@@ -141,3 +141,76 @@ export const repeatIcon = style({
   marginTop: "20px",
   cursor: "pointer",
 });
+
+export const trackListContainer = style({
+  backgroundColor: "#FFE0F0",
+  borderRadius: "20px",
+  padding: "20px",
+});
+
+export const trackListTitle = style({
+  color: "#383838",
+  fontSize: "24px",
+  fontWeight: "bold",
+  marginBottom: "20px",
+});
+
+export const trackList = style({
+  listStyle: "none",
+  padding: "0",
+  margin: "0",
+});
+
+export const trackListItem = style({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  backgroundColor: "#FFB6C1",
+  borderRadius: "10px",
+  padding: "10px",
+  marginBottom: "10px",
+});
+
+export const trackListItemTextContainer = style({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+});
+
+export const trackListItemText = style({
+  color: "#383838",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  marginRight: "auto",
+});
+
+export const trackListItemButton = style({
+  backgroundColor: "#FF69B4",
+  color: "#FFFFFF",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "10px",
+  padding: "5px 10px",
+  marginRight: "10px",
+});
+
+export const trackListItemButtonPlaying = style({
+  backgroundColor: "#FF4500",
+  color: "#FFFFFF",
+  border: "none",
+  cursor: "default",
+  borderRadius: "10px",
+  padding: "5px 10px",
+  marginRight: "10px",
+});
+
+export const trackListItemButtonSelected = style({
+  backgroundColor: "#FF1493",
+  color: "#FFFFFF",
+  border: "none",
+  cursor: "default",
+  borderRadius: "10px",
+  padding: "5px 10px",
+  marginRight: "10px",
+});

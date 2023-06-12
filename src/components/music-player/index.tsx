@@ -13,18 +13,16 @@ import type { TrackInfo } from "@services/player";
 import type { FC } from "react";
 
 interface TracksListProps {
-  isPlaying:boolean
+  isPlaying: boolean;
   trackInfos: TrackInfo[];
   currentTrackInfo: TrackInfo;
   setTrack: (track: Blob) => void;
 }
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
-
   const handleSetTrack = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      const title = event.currentTarget.textContent;
-      if (title === null) return;
+      const title = event.currentTarget.dataset.title;
       const trackInfo = trackInfos.find((trackInfo) => trackInfo.title === title);
       if (!trackInfo) return;
       setTrack(trackInfo.file);
@@ -33,23 +31,28 @@ const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackIn
   );
 
   return (
-    <>
-      <div>再生リスト</div>
-      <ul>
+    <div className={styles.trackListContainer}>
+      <div className={styles.trackListTitle}>再生リスト</div>
+      <ul className={styles.trackList}>
         {trackInfos.map((trackInfo) => (
-          <li key={trackInfo.url}>
-            <button onClick={handleSetTrack}>{trackInfo.title}</button>
-            {trackInfo.title}
-            {!isPlaying && trackInfo.title === currentTrackInfo.title && <span>currently selected</span>}
-            {(isPlaying && trackInfo.title === currentTrackInfo.title) ? <span>Now Playing</span> : null}
+          <li key={trackInfo.url} className={styles.trackListItem}>
+            {trackInfo.title !== currentTrackInfo.title &&
+            <button onClick={handleSetTrack} data-title={trackInfo.title} className={styles.trackListItemButton}>この曲にする！</button>}
+            {(isPlaying && trackInfo.title === currentTrackInfo.title) ?
+            <button className={styles.trackListItemButtonPlaying}>🎵 Now Playing</button> : null}
+            {!isPlaying && trackInfo.title === currentTrackInfo.title &&
+            <button className={styles.trackListItemButtonSelected}>💖 currently selected</button>}
+            <div className={styles.trackListItemTextContainer}>
+              <span className={styles.trackListItemText}>{trackInfo.title}</span>
+            </div>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
-}
+};
 
-export const MusicPlayer:FC = () => {
+export const MusicPlayer: FC = () => {
   const {
     currentTrack,
     currentTime,
