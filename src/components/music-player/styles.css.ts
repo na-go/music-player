@@ -43,8 +43,8 @@ export const seekBarBox = style({
 });
 
 export const seekBar = style({
-appearance: 'none',
-  width: '100%',
+  appearance: 'none',
+  width: '90%',
   height: '5px',
   borderRadius: '5px',
   backgroundColor: '#c0c0c0',
@@ -63,6 +63,9 @@ appearance: 'none',
 
 export const duration = style({
   marginLeft: '10px',
+  marginTop: '10px',
+  marginBottom: '10px',
+  fontWeight: 'bold',
 });
 
 export const playPauseButton = style({
@@ -75,6 +78,23 @@ export const playPauseButton = style({
   ':hover': {
     backgroundColor: '#3498db',
   },
+});
+
+export const volumeContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  marginBottom: '20px',
+  justifyContent: 'space-between',
+});
+
+export const volumeIcon = style({
+  width: '20px',
+  height: '20px',
+  marginLeft: '10px',
+  marginRight: '10px',
+  marginTop: '20px',
+  cursor: 'pointer',
 });
 
 export const volumeBar = style({

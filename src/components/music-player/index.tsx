@@ -11,7 +11,7 @@ export const MusicPlayer = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
       if (!file) return;
-      chooseTrack({ file });
+      chooseTrack(file);
     },
     [chooseTrack]
   );
@@ -55,7 +55,7 @@ export const MusicPlayer = () => {
           type="range"
           min={0}
           max={currentTrackInfo.duration}
-          value={currentTime}
+          value={currentTime ?? 0}
           className={styles.seekBar}
           onChange={handleSeek}
           onMouseDown={handleSeekMouseDown}
@@ -72,14 +72,27 @@ export const MusicPlayer = () => {
       ) : (
         <p>No track selected</p>
       )}
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={currentVolume*100}
-        className={styles.volumeBar}
-        onChange={handleVolumeChange}
-      />
+      {/* TODO: assets/icons/volume-down.svgとassets/icons/volume-up.svgでinputを挟む */}
+      <div className={styles.volumeContainer}>
+        <img
+          className={styles.volumeIcon}
+          src='src/assets/icons/volume-down.png'
+          alt="volume-down"
+        />
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={currentVolume*100}
+          className={styles.volumeBar}
+          onChange={handleVolumeChange}
+        />
+        <img
+          className={styles.volumeIcon}
+          src='src/assets/icons/volume-up.png'
+          alt="volume-down"
+        />
+      </div>
     </div>
   );
 };

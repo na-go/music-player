@@ -1,11 +1,11 @@
 // src/react/player.ts
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { distinctUntilChanged } from "rxjs";
 
 import { createMusicPlayer } from "@services/player";
 
-import type { MusicPlayer, Track, TrackInfo } from "@services/player";
+import type { MusicPlayer, TrackInfo } from "@services/player";
 
 interface MusicPlayerState {
   currentTrack: HTMLAudioElement | null;
@@ -15,7 +15,7 @@ interface MusicPlayerState {
   currentVolume: number;
   play: () => Promise<void>;
   pause: () => void;
-  chooseTrack: (track: Track) => void;
+  chooseTrack: (track: Blob) => void;
   seek: (time: number) => void;
   seekMouseDown: () => void;
   seekMouseUp: () => Promise<void>;
@@ -23,14 +23,14 @@ interface MusicPlayerState {
 }
 
 export const useMusicPlayer = (): MusicPlayerState => {
-  const initialTrackInfo: TrackInfo = {
+  const initialTrackInfo: TrackInfo = useMemo(() => ({
     title: "",
     duration: 0,
-  };
+  }), []);
   const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [beforeIsPlaying, setBeforeIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentTime, setCurrentTime] = useState<number>(0);
   const [currentVolume, setCurrentVolume] = useState(1);
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
@@ -69,7 +69,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     }
   };
 
-  const chooseTrack = (track: Track) => {
+  const chooseTrack = (track: Blob) => {
     if (musicPlayer) {
       musicPlayer.setTrack(track).subscribe(setTrackInfo);
     }
