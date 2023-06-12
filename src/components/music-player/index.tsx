@@ -7,7 +7,6 @@ import volumeUp from "@assets/icons/volume-up.svg";
 import { useMusicPlayer } from "@react/player";
 import { translateNumberToDate } from "@utils/translate-number-to-date";
 
-
 import * as styles from "./styles.css";
 
 export const MusicPlayer = () => {

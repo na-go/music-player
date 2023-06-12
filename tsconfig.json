@@ -16,7 +16,7 @@
       "@components/*": ["src/components/*"],
       "@services/*": ["src/services/*"],
       "@react/*": ["src/react/*"],
-      "@assets/*": ["src/assets/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": ["src", "types", "vitest-setup.ts"],
