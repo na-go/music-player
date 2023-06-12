@@ -22,12 +22,24 @@ interface MusicPlayerState {
   volume: (volume: number) => void
 }
 
+let player: MusicPlayer | null = null;
+
+const createSingletonPlayer = (): MusicPlayer => {
+  if (!player) {
+    player = createMusicPlayer();
+  }
+
+  return player;
+}
+
 export const useMusicPlayer = (): MusicPlayerState => {
   const initialTrackInfo: TrackInfo = useMemo(() => ({
     title: "",
     duration: 0,
   }), []);
-  const [musicPlayer, setMusicPlayer] = useState<MusicPlayer | null>(null);
+
+  const musicPlayer = createSingletonPlayer();
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [beforeIsPlaying, setBeforeIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -35,69 +47,54 @@ export const useMusicPlayer = (): MusicPlayerState => {
   const [track, setTrack] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<TrackInfo>(initialTrackInfo);
 
-  // TODO: シングルトンパターンを読んでリファクタリングする
   useEffect(() => {
-    const player = createMusicPlayer();
-    setMusicPlayer(player);
 
-    const subscription = player.getIsPlaying.subscribe(setIsPlaying);
-    const trackSubscription = player.getCurrentTrack.pipe(distinctUntilChanged()).subscribe((currentTrack) => {
+    const subscription = musicPlayer.getIsPlaying.subscribe(setIsPlaying);
+    const trackSubscription = musicPlayer.getCurrentTrack.pipe(distinctUntilChanged()).subscribe((currentTrack) => {
       setTrack(currentTrack);
     });
-    const volumeSubscription = player.getVolume.subscribe(setCurrentVolume);
+    const volumeSubscription = musicPlayer.getVolume.subscribe(setCurrentVolume);
 
-    const currentTimeSubscription = player.getCurrentTime().subscribe(setCurrentTime);
+    const currentTimeSubscription = musicPlayer.getCurrentTime().subscribe(setCurrentTime);
 
     return () => {
       subscription.unsubscribe();
       trackSubscription.unsubscribe();
-      player.pause();
+      musicPlayer.pause();
       currentTimeSubscription.unsubscribe();
       volumeSubscription.unsubscribe();
     };
-  }, []);
+  }, [musicPlayer]);
 
   const play = async () => {
-    if (musicPlayer && track) {
+    if (track) {
       await musicPlayer.play();
     }
   };
 
   const pause = () => {
-    if (musicPlayer) {
-      musicPlayer.pause();
-    }
+    musicPlayer.pause();
   };
 
   const chooseTrack = (track: Blob) => {
-    if (musicPlayer) {
       musicPlayer.setTrack(track).subscribe(setTrackInfo);
-    }
   };
 
   const seek = (time: number) => {
-    if (musicPlayer) {
       musicPlayer.seek(time);
-    }
   };
 
   const seekMouseDown = () => {
-    if (musicPlayer) {
       setBeforeIsPlaying(isPlaying);
       musicPlayer.pause();
-    }
   }
 
   const seekMouseUp = async () => {
-    if (musicPlayer) {
       if(beforeIsPlaying) await musicPlayer.play();
-    }
   }
 
   const volume = (volume: number) => {
-    if (musicPlayer) {
       musicPlayer.setVolume(volume);
-    }
   }
 
   return { currentTrack: track, currentTime, currentVolume, isPlaying, currentTrackInfo: trackInfo, play, pause, chooseTrack, seek, seekMouseDown, seekMouseUp, volume };
