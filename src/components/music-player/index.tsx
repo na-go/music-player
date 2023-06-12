@@ -21,13 +21,24 @@ interface TracksListProps {
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
 
+  const handleSetTrack = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const title = event.currentTarget.textContent;
+      if (title === null) return;
+      const trackInfo = trackInfos.find((trackInfo) => trackInfo.title === title);
+      if (!trackInfo) return;
+      setTrack(trackInfo.file);
+    },
+    [trackInfos, setTrack]
+  );
+
   return (
     <>
       <div>再生リスト</div>
       <ul>
         {trackInfos.map((trackInfo) => (
           <li key={trackInfo.url}>
-            {/* <button onClick={handleSetTrack}>{trackInfo.title}</button> */}
+            <button onClick={handleSetTrack}>{trackInfo.title}</button>
             {trackInfo.title}
             {!isPlaying && trackInfo.title === currentTrackInfo.title && <span>currently selected</span>}
             {(isPlaying && trackInfo.title === currentTrackInfo.title) ? <span>Now Playing</span> : null}

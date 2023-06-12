@@ -5,7 +5,7 @@ export interface Track {
   file: Blob;
 }
 
-export interface TrackInfo {
+export interface TrackInfo extends Track {
   url: string;
   title: string;
   duration: number;
@@ -62,6 +62,7 @@ export const createMusicPlayer = (): MusicPlayer => {
       fromEvent(audio, "loadedmetadata").pipe(
         take(1),
         map(() => ({
+          file: track.file,
           url,
           title: track.file.name,
           duration: audio.duration,
@@ -81,6 +82,7 @@ export const createMusicPlayer = (): MusicPlayer => {
           fromEvent(audio, "loadedmetadata").pipe(
             take(1),
             map(() => ({
+              file: track,
               url,
               title: track.name,
               duration: audio.duration,

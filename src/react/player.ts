@@ -39,6 +39,7 @@ const createSingletonPlayer = (): MusicPlayer => {
 export const useMusicPlayer = (): MusicPlayerState => {
   const initialTrackInfo: TrackInfo = useMemo(
     () => ({
+      file: new Blob(),
       url: "",
       title: "",
       duration: 0,
