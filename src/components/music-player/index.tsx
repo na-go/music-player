@@ -16,18 +16,18 @@ interface TracksListProps {
   isPlaying: boolean;
   trackInfos: Track[];
   currentTrackInfo: Track;
-  setTrack: (id: string) => void;
+  onChange: (id: string) => void;
 }
 
-const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
+const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, onChange }) => {
   const handleSetTrack = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const id = event.currentTarget.dataset.title;
       const trackInfoId = trackInfos.find((trackInfo) => trackInfo.title === id)?.id;
       if (trackInfoId === undefined) return;
-      setTrack(trackInfoId);
+      onChange(trackInfoId);
     },
-    [trackInfos, setTrack]
+    [trackInfos, onChange]
   );
 
   return (
@@ -179,7 +179,7 @@ export const MusicPlayer: FC = () => {
           )}
         </button>
       </div>
-      <TracksList isPlaying={isPlaying} trackInfos={tracks} currentTrackInfo={currentTrackInfo} setTrack={setTrack} />
+      <TracksList isPlaying={isPlaying} trackInfos={tracks} currentTrackInfo={currentTrackInfo} onChange={setTrack} />
     </div>
   );
 };
