@@ -1,24 +1,15 @@
-import { BehaviorSubject, fromEvent, take, type Observable, switchMap, map, filter } from "rxjs";
+import { BehaviorSubject, type Observable, map, fromEvent } from "rxjs";
 
-export interface Track {
-  file: Blob;
-}
-
-export interface TrackInfo extends Track {
-  url: string;
-  title: string;
-  duration: number;
-}
+import type { Playlist } from "./playlist";
+import type { Track } from "./types";
 
 export interface MusicPlayer {
-  getCurrentTrack: Observable<HTMLAudioElement | null>;
-  getCurrentTime: () => Observable<number>;
+  getAudio: Observable<HTMLAudioElement | null>;
+  getCurrentTime: Observable<number>;
   getIsPlaying: Observable<boolean>;
   getVolume: Observable<number>;
   getIsLoop: Observable<boolean>;
-  getTracks: Observable<TrackInfo[]>;
-  appendTrack: (track: Track) => Promise<void>;
-  setTrack: (track: Track) => Observable<TrackInfo>;
+  setTrack: (id: string) => Promise<void>;
   play: () => Promise<void>;
   pause: () => Promise<void>;
   seek: (time: number) => Promise<void>;
@@ -26,24 +17,31 @@ export interface MusicPlayer {
   toggleRepeatOnce: () => Promise<void>;
 }
 
-export const createMusicPlayer = (): MusicPlayer => {
+export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
   const audio = new Audio();
 
-  const currentTrackSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
+  const audioSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
   const isPlayingSubject = new BehaviorSubject<boolean>(false);
   const isLoopSubject = new BehaviorSubject<boolean>(false);
   const volumeSubject = new BehaviorSubject<number>(1);
-  const tracksSubject = new BehaviorSubject<TrackInfo[]>([]);
+  const tracksSubject = new BehaviorSubject<Track[]>([]);
 
   return {
-    getCurrentTrack: currentTrackSubject,
-    getCurrentTime: () => {
-      return fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
-    },
+    getAudio: audioSubject,
+    getCurrentTime: fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime)),
     getVolume: volumeSubject,
     getIsPlaying: isPlayingSubject,
     getIsLoop: isLoopSubject,
-    getTracks: tracksSubject,
+
+    setTrack: async (id: string) => {
+      const track = playlist.getTrack(id);
+      track.pipe(map((track) => track.url)).subscribe((url) => {
+        audio.src = url;
+      });
+      audioSubject.next(audio);
+      isPlayingSubject.next(false);
+    },
+
     play: async () => {
       await audio.play();
       isPlayingSubject.next(true);
@@ -52,53 +50,13 @@ export const createMusicPlayer = (): MusicPlayer => {
       audio.pause();
       isPlayingSubject.next(false);
     },
-    appendTrack: async (track) => {
-      const url = URL.createObjectURL(track.file);
-      audio.src = url;
-      currentTrackSubject.next(audio);
-      isPlayingSubject.next(false);
 
-      fromEvent(audio, "loadedmetadata")
-        .pipe(
-          take(1),
-          filter(() => tracksSubject.value.every((trackInfo) => trackInfo.file.name !== track.file.name)),
-          map(() => ({
-            file: track.file,
-            url,
-            title: track.file.name,
-            duration: audio.duration,
-          }))
-        )
-        .subscribe((trackInfo) => {
-          tracksSubject.next([...tracksSubject.value, trackInfo]);
-        });
-    },
-    setTrack: (track) => {
-      const url = URL.createObjectURL(track.file);
-      audio.src = url;
-      currentTrackSubject.next(audio);
-      isPlayingSubject.next(false);
-
-      return currentTrackSubject.pipe(
-        switchMap(() =>
-          fromEvent(audio, "loadedmetadata").pipe(
-            take(1),
-            map(() => ({
-              file: track.file,
-              url,
-              title: track.file.name,
-              duration: audio.duration,
-            }))
-          )
-        )
-      );
-    },
-    seek: async (time) => {
+    seek: async (time: number) => {
       audio.currentTime = time;
     },
-    setVolume: async (volume) => {
+    setVolume: async (volume: number) => {
       audio.volume = volume;
-      volumeSubject.next(audio.volume);
+      volumeSubject.next(volume);
     },
     toggleRepeatOnce: async () => {
       audio.loop = !audio.loop;

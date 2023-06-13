@@ -5,27 +5,27 @@ import repeatOnOnce from "@assets/icons/repeat-on-once.svg";
 import volumeDown from "@assets/icons/volume-down.svg";
 import volumeUp from "@assets/icons/volume-up.svg";
 import { useMusicPlayer } from "@react/player";
-import { translateNumberToDate } from "@utils/translate-number-to-date";
+import { translateNumberToDate } from "@utils/view/translate-number-to-date";
 
 import * as styles from "./styles.css";
 
-import type { TrackInfo } from "@services/player";
+import type { Track } from "@services/types";
 import type { FC } from "react";
 
 interface TracksListProps {
   isPlaying: boolean;
-  trackInfos: TrackInfo[];
-  currentTrackInfo: TrackInfo;
-  setTrack: (track: TrackInfo) => void;
+  trackInfos: Track[];
+  currentTrackInfo: Track;
+  setTrack: (id: string) => void;
 }
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
   const handleSetTrack = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      const title = event.currentTarget.dataset.title;
-      const trackInfo = trackInfos.find((trackInfo) => trackInfo.title === title);
-      if (!trackInfo) return;
-      setTrack(trackInfo);
+      const id = event.currentTarget.dataset.title;
+      const trackInfoId = trackInfos.find((trackInfo) => trackInfo.title === id)?.id;
+      if (trackInfoId === undefined) return;
+      setTrack(trackInfoId);
     },
     [trackInfos, setTrack]
   );
@@ -36,15 +36,15 @@ const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackIn
       <ul className={styles.trackList}>
         {trackInfos.map((trackInfo) => (
           <li key={trackInfo.url} className={styles.trackListItem}>
-            {trackInfo.title !== currentTrackInfo.title && (
+            {trackInfo.id !== currentTrackInfo.id && (
               <button onClick={handleSetTrack} data-title={trackInfo.title} className={styles.trackListItemButton}>
                 この曲にする！
               </button>
             )}
-            {isPlaying && trackInfo.title === currentTrackInfo.title ? (
+            {isPlaying && trackInfo.id === currentTrackInfo.id ? (
               <button className={styles.trackListItemButtonPlaying}>🎵 Now Playing</button>
             ) : null}
-            {!isPlaying && trackInfo.title === currentTrackInfo.title && (
+            {!isPlaying && trackInfo.id === currentTrackInfo.id && (
               <button className={styles.trackListItemButtonSelected}>💖 currently selected</button>
             )}
             <div className={styles.trackListItemTextContainer}>
@@ -80,7 +80,7 @@ export const MusicPlayer: FC = () => {
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
       if (!file) return;
-      await registerTrack({ file });
+      await registerTrack(file);
     },
     [registerTrack]
   );
