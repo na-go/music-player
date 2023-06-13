@@ -10,7 +10,6 @@ import type { MusicPlayer } from "@services/player";
 import type { Track } from "@services/types";
 
 interface MusicPlayerState {
-  currentTrack: HTMLAudioElement | null;
   currentTime: number;
   currentTrackInfo: Track;
   isPlaying: boolean;
@@ -109,6 +108,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
 
   const registerTrack = async (file: Blob) => {
     await playlist.appendTrack(file);
+    await musicPlayer.pause();
   };
 
   const nextTrack = useCallback(async (currentId:string) => {
@@ -169,7 +169,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
 
 
   return {
-    currentTrack: audio,
     currentTime,
     currentVolume,
     isPlaying,

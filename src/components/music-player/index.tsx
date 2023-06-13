@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 
 import repeatOff from "@assets/icons/repeat-off.svg";
 import repeatOnOnce from "@assets/icons/repeat-on-once.svg";
@@ -17,6 +17,44 @@ interface TracksListProps {
   trackInfos: Track[];
   currentTrackInfo: Track;
   onChange: (id: string) => void;
+}
+
+interface FileUploadAreaProps {
+  onFileUpload: (files: File[]) => void;
+}
+
+const FileUploadArea: FC<FileUploadAreaProps> = ({ onFileUpload }) => {
+  const handleDrop = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+
+      const files = Array.from(event.dataTransfer.files);
+
+      onFileUpload(files);
+    },
+    [onFileUpload]
+  );
+
+  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  }, []);
+
+  const handleFileSelect = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files === null) return;
+      const files = Array.from(event.target.files);
+
+      onFileUpload(files);
+    },
+    [onFileUpload]
+  );
+
+  return(
+    <div className={styles.fileUploadArea} onDrop={handleDrop} onDragOver={handleDragOver}>
+      <input type="file" id="file-upload" multiple onChange={handleFileSelect} className={styles.fileInput}/>
+      <label htmlFor="file-upload" className={styles.fileUploadText}>楽曲ファイルを選択してね！</label>
+    </div>
+  )
 }
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, onChange }) => {
@@ -59,7 +97,6 @@ const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackIn
 
 export const MusicPlayer: FC = () => {
   const {
-    currentTrack,
     currentTime,
     currentVolume,
     isPlaying,
@@ -79,11 +116,12 @@ export const MusicPlayer: FC = () => {
     nextTrack,
     prevTrack,
   } = useMusicPlayer();
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.item(0);
-      if (!file) return;
-      await registerTrack(file);
+
+
+
+  const handleFilesUpload = useCallback(
+    async (files: File[]) => {
+      await Promise.all(files.map((file) => registerTrack(file)));
     },
     [registerTrack]
   );
@@ -126,10 +164,7 @@ export const MusicPlayer: FC = () => {
 
   return (
     <div className={styles.playerContainer}>
-      <label htmlFor="music-file" className={styles.fileInputLabel}>
-        楽曲ファイルを選択してね
-      </label>
-      <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
+      <FileUploadArea onFileUpload={handleFilesUpload}/>
       <div id="music-info" className={styles.musicInfo}>
         <span>{currentTrackInfo.title === "" ? "曲が選ばれてないよ" : `🎵なうぷれ🎵${currentTrackInfo.title}`}</span>
       </div>
