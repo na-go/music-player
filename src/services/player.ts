@@ -21,6 +21,8 @@ export interface MusicPlayer {
 }
 
 export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
+  // FIXME: 二重管理やめる
+  // FIXME: DIしたい
   const audio = new Audio();
 
   const audioSubject = new BehaviorSubject<HTMLAudioElement | null>(null);
