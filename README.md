@@ -23,7 +23,7 @@ npm run dev
 ## デプロイ
 cloudflare pagesを使ってデプロイしている
 mainにpushすると自動でデプロイされる
-https://music-player.nagotzi.com/
+[ページ](https://music-player.nagotzi.com/)
 
 ## tech stack
 - React
