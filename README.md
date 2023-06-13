@@ -1,8 +1,34 @@
-# @napolab/vite
+# Music Player
 
-This is a template repository for writing react when @naporin0624 writes react.
+## Description
+ローカルから楽曲ファイルを読み込み、再生することができるアプリケーション
 
-## recommended
+## Installation
+```
+npm install
+```
 
-- volta
-- vscode
+## Development
+```
+npm run dev
+```
+
+### 各ディレクトリの役割
+- src/components: コンポーネント
+- src/views: UI
+- src/react: Reactのエントリーポイント
+- src/services: ヘッドレスアプリケーション
+- src/assets: 静的ファイル
+
+## デプロイ
+cloudflare pagesを使ってデプロイしている
+mainにpushすると自動でデプロイされる
+https://music-player.nagotzi.com/
+
+## tech stack
+- React
+- TypeScript
+- RxJS
+- vanilla-extract
+- Vite
+- cloudflare pages
