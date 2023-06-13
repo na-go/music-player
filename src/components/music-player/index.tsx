@@ -36,12 +36,17 @@ const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackIn
       <ul className={styles.trackList}>
         {trackInfos.map((trackInfo) => (
           <li key={trackInfo.url} className={styles.trackListItem}>
-            {trackInfo.title !== currentTrackInfo.title &&
-            <button onClick={handleSetTrack} data-title={trackInfo.title} className={styles.trackListItemButton}>この曲にする！</button>}
-            {(isPlaying && trackInfo.title === currentTrackInfo.title) ?
-            <button className={styles.trackListItemButtonPlaying}>🎵 Now Playing</button> : null}
-            {!isPlaying && trackInfo.title === currentTrackInfo.title &&
-            <button className={styles.trackListItemButtonSelected}>💖 currently selected</button>}
+            {trackInfo.title !== currentTrackInfo.title && (
+              <button onClick={handleSetTrack} data-title={trackInfo.title} className={styles.trackListItemButton}>
+                この曲にする！
+              </button>
+            )}
+            {isPlaying && trackInfo.title === currentTrackInfo.title ? (
+              <button className={styles.trackListItemButtonPlaying}>🎵 Now Playing</button>
+            ) : null}
+            {!isPlaying && trackInfo.title === currentTrackInfo.title && (
+              <button className={styles.trackListItemButtonSelected}>💖 currently selected</button>
+            )}
             <div className={styles.trackListItemTextContainer}>
               <span className={styles.trackListItemText}>{trackInfo.title}</span>
             </div>
@@ -72,19 +77,19 @@ export const MusicPlayer: FC = () => {
     registerTrack,
   } = useMusicPlayer();
   const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
       if (!file) return;
-      registerTrack({ file });
+      await registerTrack({ file });
     },
     [registerTrack]
   );
 
   const handleSeek = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const seekTo = parseInt(event.target.value, 10);
       if (Number.isNaN(seekTo)) return;
-      seek(seekTo);
+      await seek(seekTo);
     },
     [seek]
   );
@@ -93,15 +98,15 @@ export const MusicPlayer: FC = () => {
     await seekMouseUp();
   }, [seekMouseUp]);
 
-  const handleSeekMouseDown = useCallback(() => {
-    seekMouseDown();
+  const handleSeekMouseDown = useCallback(async () => {
+    await seekMouseDown();
   }, [seekMouseDown]);
 
   const handleVolumeChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const volumeTo = parseInt(event.target.value, 10);
       if (Number.isNaN(volumeTo)) return;
-      volume(volumeTo / 100);
+      await volume(volumeTo / 100);
     },
     [volume]
   );
@@ -132,10 +137,14 @@ export const MusicPlayer: FC = () => {
         <span className={styles.duration}>{translateNumberToDate(currentTrackInfo.duration)}</span>
       </div>
       {currentTrack ? (
+        // <div className={styles.buttonContainer}>
+        //   <button onClick={handlePrevious} className={styles.previousButton}>戻る</button>
         <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
           {isPlaying ? "Stop" : "Play"}
         </button>
-      ) : null}
+      ) : // <button onClick={handleNext} className={styles.nextButton}>進む</button>
+      // </div>
+      null}
       <div className={styles.volumeContainer}>
         <img className={styles.volumeIcon} src={volumeDown} alt="volume-down" />
         <input

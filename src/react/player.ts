@@ -16,14 +16,14 @@ interface MusicPlayerState {
   currentVolume: number;
   tracks: TrackInfo[];
   play: () => Promise<void>;
-  pause: () => void;
-  setTrack: (track: Track) => void;
-  seek: (time: number) => void;
-  seekMouseDown: () => void;
+  pause: () => Promise<void>;
+  setTrack: (track: Track) => Promise<void>;
+  seek: (time: number) => Promise<void>;
+  seekMouseDown: () => Promise<void>;
   seekMouseUp: () => Promise<void>;
-  volume: (volume: number) => void;
-  toggleRepeatOnce: () => void;
-  registerTrack: (track: Track) => void;
+  volume: (volume: number) => Promise<void>;
+  toggleRepeatOnce: () => Promise<void>;
+  registerTrack: (track: Track) => Promise<void>;
 }
 
 let player: MusicPlayer | null = null;
@@ -82,38 +82,38 @@ export const useMusicPlayer = (): MusicPlayerState => {
     }
   };
 
-  const pause = () => {
-    musicPlayer.pause();
+  const pause = async () => {
+    await musicPlayer.pause();
   };
 
-  const chooseTrack = (track: Track) => {
+  const chooseTrack = async (track: Track) => {
     musicPlayer.setTrack(track).subscribe(setTrackInfo);
   };
 
-  const seek = (time: number) => {
-    musicPlayer.seek(time);
+  const seek = async (time: number) => {
+    await musicPlayer.seek(time);
   };
 
-  const seekMouseDown = () => {
+  const seekMouseDown = async () => {
     setBeforeIsPlaying(isPlaying);
-    musicPlayer.pause();
+    await musicPlayer.pause();
   };
 
   const seekMouseUp = async () => {
     if (beforeIsPlaying) await musicPlayer.play();
   };
 
-  const volume = (volume: number) => {
-    musicPlayer.setVolume(volume);
+  const volume = async (volume: number) => {
+    await musicPlayer.setVolume(volume);
   };
 
-  const toggleRepeatOnce = () => {
-    musicPlayer.toggleRepeatOnce();
+  const toggleRepeatOnce = async () => {
+    await musicPlayer.toggleRepeatOnce();
   };
 
-  const registerTrack = (track: Track) => {
+  const registerTrack = async (track: Track) => {
     musicPlayer.setTrack(track).subscribe(setTrackInfo);
-    musicPlayer.appendTrack(track);
+    await musicPlayer.appendTrack(track);
   };
 
   return {

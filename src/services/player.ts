@@ -17,13 +17,13 @@ export interface MusicPlayer {
   getVolume: Observable<number>;
   getIsLoop: Observable<boolean>;
   getTracks: Observable<TrackInfo[]>;
-  appendTrack: (track: Track) => void;
+  appendTrack: (track: Track) => Promise<void>;
   setTrack: (track: Track) => Observable<TrackInfo>;
   play: () => Promise<void>;
   pause: () => Promise<void>;
   seek: (time: number) => Promise<void>;
   setVolume: (volume: number) => Promise<void>;
-  toggleRepeatOnce: () => void;
+  toggleRepeatOnce: () => Promise<void>;
 }
 
 export const createMusicPlayer = (): MusicPlayer => {
@@ -100,7 +100,7 @@ export const createMusicPlayer = (): MusicPlayer => {
       audio.volume = volume;
       volumeSubject.next(audio.volume);
     },
-    toggleRepeatOnce: () => {
+    toggleRepeatOnce: async () => {
       audio.loop = !audio.loop;
       isLoopSubject.next(audio.loop);
     },
