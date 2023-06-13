@@ -149,10 +149,14 @@ export const trackListContainer = style({
 });
 
 export const trackListTitle = style({
-  color: "#383838",
+  color: "#FFB6C1",
   fontSize: "24px",
   fontWeight: "bold",
   marginBottom: "20px",
+  textAlign: "center",
+  textTransform: "uppercase",
+  letterSpacing: "2px",
+  textShadow: "1px 1px 1px #FF69B4",
 });
 
 export const trackList = style({
@@ -193,6 +197,7 @@ export const trackListItemButton = style({
   borderRadius: "10px",
   padding: "5px 10px",
   marginRight: "10px",
+  width: "200px",
 });
 
 export const trackListItemButtonPlaying = style({
@@ -203,6 +208,7 @@ export const trackListItemButtonPlaying = style({
   borderRadius: "10px",
   padding: "5px 10px",
   marginRight: "10px",
+  width: "200px",
 });
 
 export const trackListItemButtonSelected = style({
@@ -213,4 +219,5 @@ export const trackListItemButtonSelected = style({
   borderRadius: "10px",
   padding: "5px 10px",
   marginRight: "10px",
+  width: "200px",
 });

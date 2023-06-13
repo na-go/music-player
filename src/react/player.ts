@@ -17,7 +17,7 @@ interface MusicPlayerState {
   tracks: TrackInfo[];
   play: () => Promise<void>;
   pause: () => void;
-  setTrack: (track: Blob) => void;
+  setTrack: (track: Track) => void;
   seek: (time: number) => void;
   seekMouseDown: () => void;
   seekMouseUp: () => Promise<void>;
@@ -86,7 +86,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     musicPlayer.pause();
   };
 
-  const chooseTrack = (track: Blob) => {
+  const chooseTrack = (track: Track) => {
     musicPlayer.setTrack(track).subscribe(setTrackInfo);
   };
 
@@ -112,8 +112,8 @@ export const useMusicPlayer = (): MusicPlayerState => {
   };
 
   const registerTrack = (track: Track) => {
-    musicPlayer.setTrack(track.file).subscribe(setTrackInfo);
-    musicPlayer.saveTrack(track);
+    musicPlayer.setTrack(track).subscribe(setTrackInfo);
+    musicPlayer.appendTrack(track);
   };
 
   return {

@@ -16,7 +16,7 @@ interface TracksListProps {
   isPlaying: boolean;
   trackInfos: TrackInfo[];
   currentTrackInfo: TrackInfo;
-  setTrack: (track: Blob) => void;
+  setTrack: (track: TrackInfo) => void;
 }
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, setTrack }) => {
@@ -25,7 +25,7 @@ const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackIn
       const title = event.currentTarget.dataset.title;
       const trackInfo = trackInfos.find((trackInfo) => trackInfo.title === title);
       if (!trackInfo) return;
-      setTrack(trackInfo.file);
+      setTrack(trackInfo);
     },
     [trackInfos, setTrack]
   );
@@ -113,7 +113,7 @@ export const MusicPlayer: FC = () => {
       </label>
       <input id="music-file" type="file" onChange={handleFileChange} accept="audio/*" className={styles.fileInput} />
       <div id="music-info" className={styles.musicInfo}>
-        <span>{currentTrackInfo.title}</span>
+        <span>{currentTrackInfo.title === "" ? "曲が選ばれてないよ" : `🎵なうぷれ🎵${currentTrackInfo.title}`}</span>
       </div>
       <div id="seek-bar-box" className={styles.seekBarContainer}>
         <div id="current-time" className={styles.musicInfo}>
@@ -135,9 +135,7 @@ export const MusicPlayer: FC = () => {
         <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
           {isPlaying ? "Stop" : "Play"}
         </button>
-      ) : (
-        <p>No track selected</p>
-      )}
+      ) : null}
       <div className={styles.volumeContainer}>
         <img className={styles.volumeIcon} src={volumeDown} alt="volume-down" />
         <input

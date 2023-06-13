@@ -17,7 +17,7 @@ const App = () => {
           <MusicPlayer />
         </main>
         <footer className={styles.footer}>
-          <div>Twitter: @remark_tzi</div>
+          <div>@remark_tzi</div>
           <a
             target="_blank"
             href="https://icons8.com/icon/QzlN7P7hnRxs/1-%E5%9B%9E%E3%83%AA%E3%83%94%E3%83%BC%E3%83%88"

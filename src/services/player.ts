@@ -17,12 +17,12 @@ export interface MusicPlayer {
   getVolume: Observable<number>;
   getIsLoop: Observable<boolean>;
   getTracks: Observable<TrackInfo[]>;
-  saveTrack: (track: Track) => void;
-  setTrack: (file: Blob) => Observable<TrackInfo>;
+  appendTrack: (track: Track) => void;
+  setTrack: (track: Track) => Observable<TrackInfo>;
   play: () => Promise<void>;
-  pause: () => void;
-  seek: (time: number) => void;
-  setVolume: (volume: number) => void;
+  pause: () => Promise<void>;
+  seek: (time: number) => Promise<void>;
+  setVolume: (volume: number) => Promise<void>;
   toggleRepeatOnce: () => void;
 }
 
@@ -48,11 +48,11 @@ export const createMusicPlayer = (): MusicPlayer => {
       await audio.play();
       isPlayingSubject.next(true);
     },
-    pause: () => {
+    pause: async () => {
       audio.pause();
       isPlayingSubject.next(false);
     },
-    saveTrack: (track) => {
+    appendTrack: async (track) => {
       const url = URL.createObjectURL(track.file);
       audio.src = url;
       currentTrackSubject.next(audio);
@@ -74,7 +74,7 @@ export const createMusicPlayer = (): MusicPlayer => {
         });
     },
     setTrack: (track) => {
-      const url = URL.createObjectURL(track);
+      const url = URL.createObjectURL(track.file);
       audio.src = url;
       currentTrackSubject.next(audio);
       isPlayingSubject.next(false);
@@ -84,27 +84,24 @@ export const createMusicPlayer = (): MusicPlayer => {
           fromEvent(audio, "loadedmetadata").pipe(
             take(1),
             map(() => ({
-              file: track,
+              file: track.file,
               url,
-              title: track.name,
+              title: track.file.name,
               duration: audio.duration,
             }))
           )
         )
       );
     },
-    seek: (time) => {
+    seek: async (time) => {
       audio.currentTime = time;
-      fromEvent(audio, "timeupdate").pipe(map(() => audio.currentTime));
     },
-    setVolume: (volume) => {
+    setVolume: async (volume) => {
       audio.volume = volume;
-      fromEvent(audio, "volumechange").pipe(map(() => audio.volume));
       volumeSubject.next(audio.volume);
     },
     toggleRepeatOnce: () => {
       audio.loop = !audio.loop;
-      fromEvent(audio, "loop").pipe(map(() => audio.loop));
       isLoopSubject.next(audio.loop);
     },
   };
