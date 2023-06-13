@@ -1,7 +1,7 @@
 // src/react/player.ts
 
-import { useEffect, useMemo, useState } from "react";
-import { distinctUntilChanged } from "rxjs";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { distinctUntilChanged, firstValueFrom } from "rxjs";
 
 import { createMusicPlayer } from "@services/player";
 import { createPlaylist, type Playlist } from "@services/playlist";
@@ -16,6 +16,7 @@ interface MusicPlayerState {
   isPlaying: boolean;
   isRepeat: boolean;
   currentVolume: number;
+  currentTrackId: string | null;
   tracks: Track[];
   play: () => Promise<void>;
   pause: () => Promise<void>;
@@ -26,6 +27,8 @@ interface MusicPlayerState {
   volume: (volume: number) => Promise<void>;
   toggleRepeatOnce: () => Promise<void>;
   registerTrack: (file: Blob) => Promise<void>;
+  nextTrack: (currentId:string) => Promise<void>;
+  prevTrack: (currentId:string) => Promise<void>;
 }
 
 let player: MusicPlayer | null = null;
@@ -57,6 +60,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
   const [beforeIsPlaying, setBeforeIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [currentVolume, setCurrentVolume] = useState(1);
+  const [currentTrackId, setCurrentTrackId] = useState<string | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [trackInfo, setTrackInfo] = useState<Track>({
     id: "",
@@ -65,24 +69,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
     url: "",
   });
   const [tracks, setTracks] = useState<Track[]>([]);
-
-  useEffect(() => {
-    const tracksSubscription = playlist.getTracks.subscribe(setTracks);
-    const isPlayingSubscription = musicPlayer.getIsPlaying.pipe(distinctUntilChanged()).subscribe(setIsPlaying);
-    const audioSubscription = musicPlayer.getAudio.pipe(distinctUntilChanged()).subscribe(setAudio);
-    const volumeSubscription = musicPlayer.getVolume.pipe(distinctUntilChanged()).subscribe(setCurrentVolume);
-    const currentTimeSubscription = musicPlayer.getCurrentTime.pipe(distinctUntilChanged()).subscribe(setCurrentTime);
-    const isLoopSubscription = musicPlayer.getIsLoop.pipe(distinctUntilChanged()).subscribe(setIsRepeat);
-
-    return () => {
-      tracksSubscription.unsubscribe();
-      isPlayingSubscription.unsubscribe();
-      audioSubscription.unsubscribe();
-      currentTimeSubscription.unsubscribe();
-      volumeSubscription.unsubscribe();
-      isLoopSubscription.unsubscribe();
-    };
-  }, [musicPlayer, playlist.getTracks]);
 
   const play = async () => {
     if (audio) {
@@ -125,6 +111,62 @@ export const useMusicPlayer = (): MusicPlayerState => {
     await playlist.appendTrack(file);
   };
 
+  const nextTrack = useCallback(async (currentId:string) => {
+    await musicPlayer.next(currentId);
+    const nextTrackId = await firstValueFrom(musicPlayer.getCurrentId);
+    if (nextTrackId !== null) {
+      const track = await firstValueFrom(playlist.getTrack(nextTrackId));
+      setTrackInfo(track);
+    }
+  }, [musicPlayer, playlist]);
+
+  const prevTrack = async (currentId:string) => {
+    await musicPlayer.prev(currentId);
+    const prevTrackId = await firstValueFrom(musicPlayer.getCurrentId);
+    if (prevTrackId !== null) {
+      const track = await firstValueFrom(playlist.getTrack(prevTrackId));
+      setTrackInfo(track);
+    }
+  };
+
+  useEffect(() => {
+    const tracksSubscription = playlist.getTracks.subscribe(setTracks);
+    const isPlayingSubscription = musicPlayer.getIsPlaying.pipe(distinctUntilChanged()).subscribe(setIsPlaying);
+    const audioSubscription = musicPlayer.getAudio.pipe(distinctUntilChanged()).subscribe(setAudio);
+    const volumeSubscription = musicPlayer.getVolume.pipe(distinctUntilChanged()).subscribe(setCurrentVolume);
+    const currentTimeSubscription = musicPlayer.getCurrentTime.pipe(distinctUntilChanged()).subscribe(setCurrentTime);
+    const isLoopSubscription = musicPlayer.getIsLoop.pipe(distinctUntilChanged()).subscribe(setIsRepeat);
+    const currentIdSubscription = musicPlayer.getCurrentId.pipe(distinctUntilChanged()).subscribe(setCurrentTrackId);
+
+    return () => {
+      tracksSubscription.unsubscribe();
+      isPlayingSubscription.unsubscribe();
+      audioSubscription.unsubscribe();
+      currentTimeSubscription.unsubscribe();
+      volumeSubscription.unsubscribe();
+      isLoopSubscription.unsubscribe();
+      currentIdSubscription.unsubscribe();
+    };
+  }, [audio, currentTrackId, musicPlayer, nextTrack, playlist.getTracks]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      const checkEnd = setInterval(async () => {
+        const audio = await firstValueFrom(musicPlayer.getAudio);
+        if (!audio) return;
+        if (audio.currentTime >= audio.duration) {
+          if (currentTrackId === null) return;
+          await nextTrack(currentTrackId);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(checkEnd);
+      };
+    }
+  }, [isPlaying, musicPlayer, currentTrackId, nextTrack]);
+
+
   return {
     currentTrack: audio,
     currentTime,
@@ -133,6 +175,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     isRepeat,
     tracks,
     currentTrackInfo: trackInfo,
+    currentTrackId,
     play,
     pause,
     setTrack: chooseTrack,
@@ -142,5 +185,7 @@ export const useMusicPlayer = (): MusicPlayerState => {
     volume,
     toggleRepeatOnce,
     registerTrack,
+    nextTrack,
+    prevTrack,
   };
 };

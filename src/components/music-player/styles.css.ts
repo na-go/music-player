@@ -221,3 +221,31 @@ export const trackListItemButtonSelected = style({
   marginRight: "10px",
   width: "200px",
 });
+
+export const buttonContainer = style({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "20px",
+});
+
+export const previousButton = style({
+  backgroundColor: "#FFB6C1",
+  color: "#FFFFFF",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "10px",
+  padding: "5px 10px",
+  marginRight: "10px",
+});
+
+export const nextButton = style({
+  backgroundColor: "#FFB6C1",
+  color: "#FFFFFF",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "10px",
+  padding: "5px 10px",
+  marginLeft: "10px",
+});
+

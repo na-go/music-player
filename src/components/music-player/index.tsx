@@ -66,6 +66,7 @@ export const MusicPlayer: FC = () => {
     isRepeat,
     tracks,
     currentTrackInfo,
+    currentTrackId,
     play,
     pause,
     setTrack,
@@ -75,6 +76,8 @@ export const MusicPlayer: FC = () => {
     volume,
     toggleRepeatOnce,
     registerTrack,
+    nextTrack,
+    prevTrack,
   } = useMusicPlayer();
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +114,16 @@ export const MusicPlayer: FC = () => {
     [volume]
   );
 
+  const handleNext = useCallback(async () => {
+    if (currentTrackId === null) return;
+    await nextTrack(currentTrackId);
+  }, [currentTrackId, nextTrack]);
+
+  const handlePrevious = useCallback(async () => {
+    if (currentTrackId === null) return;
+    await prevTrack(currentTrackId);
+  }, [currentTrackId, prevTrack]);
+
   return (
     <div className={styles.playerContainer}>
       <label htmlFor="music-file" className={styles.fileInputLabel}>
@@ -136,15 +149,15 @@ export const MusicPlayer: FC = () => {
         />
         <span className={styles.duration}>{translateNumberToDate(currentTrackInfo.duration)}</span>
       </div>
-      {currentTrack ? (
-        // <div className={styles.buttonContainer}>
-        //   <button onClick={handlePrevious} className={styles.previousButton}>戻る</button>
+      {currentTrackId !== null ? (
+        <div className={styles.buttonContainer}>
+          <button onClick={handlePrevious} className={styles.previousButton}>前の曲</button>
         <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
           {isPlaying ? "Stop" : "Play"}
         </button>
-      ) : // <button onClick={handleNext} className={styles.nextButton}>進む</button>
-      // </div>
-      null}
+        <button onClick={handleNext} className={styles.nextButton}>次の曲</button>
+        </div>
+      ) : null}
       <div className={styles.volumeContainer}>
         <img className={styles.volumeIcon} src={volumeDown} alt="volume-down" />
         <input

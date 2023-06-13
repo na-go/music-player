@@ -1,6 +1,6 @@
 import { BehaviorSubject, filter, map } from "rxjs";
 
-import { createTrackFromBlob } from "@utils/services/track-from-blob";
+import { createTrackFromBlob } from "@utils/services/generate-track-from-blob";
 
 import type { Track } from "./types";
 import type { Observable } from "rxjs";

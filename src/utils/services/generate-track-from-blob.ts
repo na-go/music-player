@@ -10,8 +10,8 @@ export const createTrackFromBlob = async (file: Blob): Promise<Track> => {
   const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
   const track: Track = {
-    id: generateId(), // 何らかの形でユニークなIDを生成する
-    title: file.name, // メタデータから取得するかユーザーに入力させる
+    id: generateId(),
+    title: file.name,
     duration: audioBuffer.duration,
     url: URL.createObjectURL(file),
   };
