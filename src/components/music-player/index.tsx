@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useCallback } from "react";
 
 import repeatOff from "@assets/icons/repeat-off.svg";
@@ -162,6 +163,29 @@ export const MusicPlayer: FC = () => {
     await prevTrack(currentTrackId);
   }, [currentTrackId, prevTrack]);
 
+  const handleGetUser = useCallback(async () => {
+    try {
+      const res = await axios.get('https://music-player-d1-drizzle.mitsume-anko9195.workers.dev/api/users')
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
+
+  const handlePostUser = useCallback(async () => {
+    const newUser = {
+      name: 'who',
+      email: 'whoami@example.com',
+      password: 'whoami'
+    }
+    try {
+      const res = await axios.post('https://music-player-d1-drizzle.mitsume-anko9195.workers.dev/api/user', newUser)
+    console.log(res)
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
+
   return (
     <div className={styles.playerContainer}>
       <FileUploadArea onFileUpload={handleFilesUpload}/>
@@ -213,6 +237,8 @@ export const MusicPlayer: FC = () => {
             <img className={styles.repeatIcon} src={repeatOff} alt="repeat" />
           )}
         </button>
+        <button onClick={handleGetUser} >Get User</button>
+        <button onClick={handlePostUser} >Post User</button>
       </div>
       <TracksList isPlaying={isPlaying} trackInfos={tracks} currentTrackInfo={currentTrackInfo} onChange={setTrack} />
     </div>
