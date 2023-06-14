@@ -6,6 +6,7 @@ import { ThemeProvider } from "@theme/provider";
 import * as styles from "./styles.css";
 
 const App = () => {
+
   return (
     <ThemeProvider>
       <div className={styles.root}>
