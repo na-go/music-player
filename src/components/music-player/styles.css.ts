@@ -249,36 +249,35 @@ export const nextButton = style({
   marginLeft: "10px",
 });
 
-
 export const fileUploadArea = style({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  height: '200px',
-  border: '2px dashed #FF69B4',
-  borderRadius: '10px',
-  color: '#FF69B4',
-  cursor: 'pointer',
-  ':hover': {
-    backgroundColor: '#ffe0f0',
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height: "200px",
+  border: "2px dashed #FF69B4",
+  borderRadius: "10px",
+  color: "#FF69B4",
+  cursor: "pointer",
+  ":hover": {
+    backgroundColor: "#ffe0f0",
   },
 });
 
 export const filesInput = style({
-  display: 'none',
+  display: "none",
 });
 
 export const fileUploadText = style({
-  color: '#FF69B4',
-  backgroundColor: '#ffe0f0',
-  padding: '10px 20px',
-  borderRadius: '20px',
-  fontSize: '1.2em',
-  fontWeight: 'bold',
-  border: '2px solid #FF69B4',
-  ':hover': {
-    color: '#FFFFFF',
-    backgroundColor: '#FF69B4',
+  color: "#FF69B4",
+  backgroundColor: "#ffe0f0",
+  padding: "10px 20px",
+  borderRadius: "20px",
+  fontSize: "1.2em",
+  fontWeight: "bold",
+  border: "2px solid #FF69B4",
+  ":hover": {
+    color: "#FFFFFF",
+    backgroundColor: "#FF69B4",
   },
 });

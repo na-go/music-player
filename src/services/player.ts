@@ -63,14 +63,14 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
       // nextTrackがない可能性があり、undefinedになるので以下を無視
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (nextTrack === undefined) {
-        audio.pause()
+        audio.pause();
         isPlayingSubject.next(false);
 
-        return
+        return;
       }
 
       audio.src = nextTrack.url;
-      await audio.play()
+      await audio.play();
       audioSubject.next(audio);
       isPlayingSubject.next(true);
       currentTrackIdSubject.next(nextTrack.id);
@@ -82,13 +82,13 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
       // prevTrackがない可能性があり、undefinedになるので以下を無視
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (prevTrack === undefined) {
-        audio.pause()
+        audio.pause();
         isPlayingSubject.next(false);
 
-        return
+        return;
       }
       audio.src = prevTrack.url;
-      await audio.play()
+      await audio.play();
       audioSubject.next(audio);
       isPlayingSubject.next(true);
       currentTrackIdSubject.next(prevTrack.id);
