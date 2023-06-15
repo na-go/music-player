@@ -165,7 +165,7 @@ export const MusicPlayer: FC = () => {
 
   const handleGetUser = useCallback(async () => {
     try {
-      const res = await axios.get('https://music-player-d1-drizzle.mitsume-anko9195.workers.dev/api/users')
+      const res = await axios.get('http://127.0.0.1:8787/api/user/1')
       console.log(res)
     } catch (err) {
       console.log(err)
@@ -174,13 +174,13 @@ export const MusicPlayer: FC = () => {
 
   const handlePostUser = useCallback(async () => {
     const newUser = {
-      name: 'who',
-      email: 'whoami@example.com',
-      password: 'whoami'
+      name: 'nago-local',
+      email: 'potaku-local@example.com',
+      password: 'mayusuki'
     }
     try {
-      const res = await axios.post('https://music-player-d1-drizzle.mitsume-anko9195.workers.dev/api/user', newUser)
-    console.log(res)
+      const res = await axios.post('http://127.0.0.1:8787/api/user', newUser)
+      console.log(res)
     } catch (err) {
       console.log(err)
     }
