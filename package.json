@@ -8,7 +8,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "generate": "drizzle-kit generate:sqlite --out migrations --schema functions/server/db/schema/*",
+    "generate": "drizzle-kit generate:sqlite --out migrations --schema db/schema/*",
     "migrate": "wrangler d1 migrations apply music-player --local",
     "production-migrate": "wrangler d1 migrations apply music-player",
     "dev": "wrangler pages dev --d1=DB --persist -- vite dev",
