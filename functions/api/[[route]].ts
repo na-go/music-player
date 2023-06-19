@@ -18,6 +18,8 @@ app.use("/api/*", async (c, next) => {
   await next();
 });
 
+app.basePath('/api')
+
 const route = app
   .get(
     "/api/tracks",
