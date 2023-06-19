@@ -21,16 +21,16 @@ app.use("/api/*", async (c, next) => {
 const route = app
   .get(
     "/api/tracks",
-    zValidator(
-      "query",
-      z.array(
-        z.object({
-          id: z.number(),
-          name: z.string(),
-          url: z.string(),
-        })
-      )
-    ),
+    // zValidator(
+    //   "query",
+    //   z.array(
+    //     z.object({
+    //       id: z.number(),
+    //       name: z.string(),
+    //       url: z.string(),
+    //     })
+    //   )
+    // ),
     getTracks
   )
   .get(
