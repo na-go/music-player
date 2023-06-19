@@ -1,4 +1,0 @@
-[[ d1_databases ]]
-binding = "DB" # i.e. available in your Worker on env.DB
-database_name = "music-player"
-database_id = "105b698a-f18e-43c6-82a8-170f71da6c40"
