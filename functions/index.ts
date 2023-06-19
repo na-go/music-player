@@ -9,7 +9,7 @@ import { getTrack, getTracks, postTrack } from "./server/modules/tracks";
 import type { Env } from "../types/type";
 
 const app = new Hono<Env>();
-app.basePath('/api')
+app.basePath("/api");
 
 app.use("/api/*", cors());
 
@@ -17,7 +17,6 @@ app.use("/api/*", async (c, next) => {
   c.set("db", drizzle(c.env.DB));
   await next();
 });
-
 
 const route = app
   .get(
