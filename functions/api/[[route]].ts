@@ -49,6 +49,6 @@ const route = app
 
 export type AppType = typeof route;
 
-export const onRequest = handle(app, "/api");
+export const onRequest = handle(app);
 
 export default app;
