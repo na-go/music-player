@@ -133,4 +133,4 @@ dist
 # cloudflare
 .wrangler
 migrations
-wrangler.toml
+.devs.vars
