@@ -1,6 +1,8 @@
+import { zValidator } from "@hono/zod-validator";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { z } from "zod";
 
 import { getTrack, getTracks, postTrack } from "./modules/tracks";
 
@@ -25,7 +27,16 @@ const route = app
     "/api/track/:id",
     getTrack
   )
-  .post("/api/track", postTrack);
+  .post(
+    "/api/track",
+    zValidator(
+      "form",
+      z.object({
+      name: z.string(),
+      url: z.string(),
+    })
+    ),
+    postTrack);
 
 export type AppType = typeof route;
 
