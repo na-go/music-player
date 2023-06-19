@@ -1,6 +1,9 @@
-import { BehaviorSubject, filter, map } from "rxjs";
+import { BehaviorSubject, filter, firstValueFrom, map } from "rxjs";
 
 import { createTrackFromBlob } from "@utils/services/generate-track-from-blob";
+
+import { client } from "./client";
+import { tracksResponseSchema } from "./schema";
 
 import type { Track } from "./types";
 import type { Observable } from "rxjs";
@@ -11,6 +14,7 @@ export interface Playlist {
   appendTrack: (file: Blob) => Promise<void>; // fileからtrackを作成して追加する
   removeTrack: (id: string) => Promise<void>;
   updateTrack: (id: string, track: Track) => Promise<void>;
+  fetchTracks: () => Promise<Observable<Track[]>>
 }
 
 export const createPlaylist = (): Playlist => {
@@ -44,5 +48,21 @@ export const createPlaylist = (): Playlist => {
         tracksSubject.next([...tracks]);
       }
     },
+    fetchTracks: async () => {
+      const currentTracks = await firstValueFrom(tracksSubject)
+      const response = await client.api.tracks.$get()
+      const tracksResult = tracksResponseSchema(response).safeParse(response);
+      if (!tracksResult.success) throw new Error("楽曲情報の取得に失敗しました")
+      const tracks:Track[] = tracksResult.data.map((tracks) => ({
+          id: `${tracks.id}`,
+          title: tracks.name,
+          url: tracks.url,
+          duration: tracks.duration,
+        }))
+
+      tracksSubject.next([...currentTracks, ...tracks])
+
+      return tracksSubject;
+    }
   };
 };
