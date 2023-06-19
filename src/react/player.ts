@@ -151,7 +151,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
     };
   }, [audio, currentTrackId, musicPlayer, nextTrack, playlist.getTracks]);
 
-  // ?: useEffect使わなくても終わり時間を監視できればできそうじゃないか？
   useEffect(() => {
     if (isPlaying) {
       const checkEnd = setInterval(async () => {

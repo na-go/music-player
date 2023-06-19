@@ -40,11 +40,11 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
 
     setTrack: async (id: string) => {
       const track = playlist.getTrack(id);
-      track.pipe(map((track) => track.url)).subscribe((url) => {
-        audio.src = url;
-      });
+      const url = await firstValueFrom(track.pipe(map((track) => track.url)));
+      audio.src = url;
       audioSubject.next(audio);
-      isPlayingSubject.next(false);
+      isPlayingSubject.next(true);
+      await audio.play();
       currentTrackIdSubject.next(id);
     },
 
