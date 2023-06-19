@@ -1,9 +1,8 @@
-
 import { generateId } from "./generate-id";
 
 import type { Track } from "@services/types";
 
-const context = new (window.AudioContext)();
+const context = new window.AudioContext();
 
 export const createTrackFromBlob = async (file: Blob): Promise<Track> => {
   const arrayBuffer = await file.arrayBuffer();

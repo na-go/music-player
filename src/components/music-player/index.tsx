@@ -50,13 +50,15 @@ const FileUploadArea: FC<FileUploadAreaProps> = ({ onFileUpload }) => {
     [onFileUpload]
   );
 
-  return(
+  return (
     <div className={styles.fileUploadArea} onDrop={handleDrop} onDragOver={handleDragOver}>
-      <input type="file" id="file-upload" multiple onChange={handleFileSelect} className={styles.fileInput}/>
-      <label htmlFor="file-upload" className={styles.fileUploadText}>楽曲ファイルを選択してね！</label>
+      <input type="file" id="file-upload" multiple onChange={handleFileSelect} className={styles.fileInput} />
+      <label htmlFor="file-upload" className={styles.fileUploadText}>
+        楽曲ファイルを選択してね！
+      </label>
     </div>
-  )
-}
+  );
+};
 
 const TracksList: FC<TracksListProps> = ({ isPlaying, trackInfos, currentTrackInfo, onChange }) => {
   const handleSetTrack = useCallback(
@@ -117,8 +119,6 @@ export const MusicPlayer: FC = () => {
     nextTrack,
     prevTrack,
   } = useMusicPlayer();
-
-
 
   const handleFilesUpload = useCallback(
     async (files: File[]) => {
@@ -188,7 +188,7 @@ export const MusicPlayer: FC = () => {
 
   return (
     <div className={styles.playerContainer}>
-      <FileUploadArea onFileUpload={handleFilesUpload}/>
+      <FileUploadArea onFileUpload={handleFilesUpload} />
       <div id="music-info" className={styles.musicInfo}>
         <span>{currentTrackInfo.title === "" ? "曲が選ばれてないよ" : `🎵なうぷれ🎵${currentTrackInfo.title}`}</span>
       </div>
@@ -210,11 +210,15 @@ export const MusicPlayer: FC = () => {
       </div>
       {currentTrackId !== null ? (
         <div className={styles.buttonContainer}>
-          <button onClick={handlePrevious} className={styles.previousButton}>前の曲</button>
-        <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
-          {isPlaying ? "Stop" : "Play"}
-        </button>
-        <button onClick={handleNext} className={styles.nextButton}>次の曲</button>
+          <button onClick={handlePrevious} className={styles.previousButton}>
+            前の曲
+          </button>
+          <button onClick={isPlaying ? pause : play} className={styles.playPauseButton}>
+            {isPlaying ? "Stop" : "Play"}
+          </button>
+          <button onClick={handleNext} className={styles.nextButton}>
+            次の曲
+          </button>
         </div>
       ) : null}
       <div className={styles.volumeContainer}>

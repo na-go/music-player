@@ -4,4 +4,3 @@ export type Track = {
   duration: number;
   url: string;
 };
-

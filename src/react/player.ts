@@ -26,8 +26,8 @@ interface MusicPlayerState {
   volume: (volume: number) => Promise<void>;
   toggleRepeatOnce: () => Promise<void>;
   registerTrack: (file: Blob) => Promise<void>;
-  nextTrack: (currentId:string) => Promise<void>;
-  prevTrack: (currentId:string) => Promise<void>;
+  nextTrack: (currentId: string) => Promise<void>;
+  prevTrack: (currentId: string) => Promise<void>;
 }
 
 let player: MusicPlayer | null = null;
@@ -47,10 +47,9 @@ const createSingletonPlaylist = (): Playlist => {
   }
 
   return playlist;
-}
+};
 
 export const useMusicPlayer = (): MusicPlayerState => {
-
   const playlist = useMemo(() => createSingletonPlaylist(), []);
   const musicPlayer = useMemo(() => createSingletonPlayer(playlist), [playlist]);
 
@@ -111,16 +110,19 @@ export const useMusicPlayer = (): MusicPlayerState => {
     await musicPlayer.pause();
   };
 
-  const nextTrack = useCallback(async (currentId:string) => {
-    await musicPlayer.next(currentId);
-    const nextTrackId = await firstValueFrom(musicPlayer.getCurrentId);
-    if (nextTrackId !== null) {
-      const track = await firstValueFrom(playlist.getTrack(nextTrackId));
-      setTrackInfo(track);
-    }
-  }, [musicPlayer, playlist]);
+  const nextTrack = useCallback(
+    async (currentId: string) => {
+      await musicPlayer.next(currentId);
+      const nextTrackId = await firstValueFrom(musicPlayer.getCurrentId);
+      if (nextTrackId !== null) {
+        const track = await firstValueFrom(playlist.getTrack(nextTrackId));
+        setTrackInfo(track);
+      }
+    },
+    [musicPlayer, playlist]
+  );
 
-  const prevTrack = async (currentId:string) => {
+  const prevTrack = async (currentId: string) => {
     await musicPlayer.prev(currentId);
     const prevTrackId = await firstValueFrom(musicPlayer.getCurrentId);
     if (prevTrackId !== null) {
@@ -149,7 +151,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
     };
   }, [audio, currentTrackId, musicPlayer, nextTrack, playlist.getTracks]);
 
-  // ?: useEffect使わなくても終わり時間を監視できればできそうじゃないか？
   useEffect(() => {
     if (isPlaying) {
       const checkEnd = setInterval(async () => {
@@ -166,7 +167,6 @@ export const useMusicPlayer = (): MusicPlayerState => {
       };
     }
   }, [isPlaying, musicPlayer, currentTrackId, nextTrack]);
-
 
   return {
     currentTime,

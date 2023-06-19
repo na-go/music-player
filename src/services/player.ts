@@ -1,7 +1,6 @@
 import { BehaviorSubject, type Observable, map, fromEvent, firstValueFrom } from "rxjs";
 
 import type { Playlist } from "./playlist";
-import type { Track } from "./types";
 
 export interface MusicPlayer {
   getAudio: Observable<HTMLAudioElement | null>;
@@ -41,11 +40,11 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
 
     setTrack: async (id: string) => {
       const track = playlist.getTrack(id);
-      track.pipe(map((track) => track.url)).subscribe((url) => {
-        audio.src = url;
-      });
+      const url = await firstValueFrom(track.pipe(map((track) => track.url)));
+      audio.src = url;
       audioSubject.next(audio);
-      isPlayingSubject.next(false);
+      isPlayingSubject.next(true);
+      await audio.play();
       currentTrackIdSubject.next(id);
     },
 
@@ -60,18 +59,18 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
     next: async (currentId: string) => {
       const tracks = await firstValueFrom(playlist.getTracks);
       const trackIndex = tracks.findIndex((track) => track.id === currentId);
-      const nextTrack: Track | undefined = tracks[trackIndex + 1];
+      const nextTrack = tracks[trackIndex + 1];
       // nextTrackがない可能性があり、undefinedになるので以下を無視
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (nextTrack === undefined) {
-        audio.pause()
+        audio.pause();
         isPlayingSubject.next(false);
 
-        return
+        return;
       }
 
       audio.src = nextTrack.url;
-      await audio.play()
+      await audio.play();
       audioSubject.next(audio);
       isPlayingSubject.next(true);
       currentTrackIdSubject.next(nextTrack.id);
@@ -83,13 +82,13 @@ export const createMusicPlayer = (playlist: Playlist): MusicPlayer => {
       // prevTrackがない可能性があり、undefinedになるので以下を無視
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (prevTrack === undefined) {
-        audio.pause()
+        audio.pause();
         isPlayingSubject.next(false);
 
-        return
+        return;
       }
       audio.src = prevTrack.url;
-      await audio.play()
+      await audio.play();
       audioSubject.next(audio);
       isPlayingSubject.next(true);
       currentTrackIdSubject.next(prevTrack.id);

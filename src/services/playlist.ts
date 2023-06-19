@@ -28,7 +28,7 @@ export const createPlaylist = (): Playlist => {
     },
     appendTrack: async (file: Blob) => {
       const track: Track = await createTrackFromBlob(file);
-      if (tracksSubject.value.find((t) => t.title === track.title)) return
+      if (tracksSubject.value.find((t) => t.title === track.title)) return;
       tracksSubject.next([...tracksSubject.value, track]);
     },
 
