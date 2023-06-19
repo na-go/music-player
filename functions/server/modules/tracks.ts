@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import { tracks } from "../db/schema/tracks";
+import { tracks } from "../../../db/schema/tracks";
 
 import type { Env } from "../../../types/type";
 import type { Context, TypedResponse } from "hono";

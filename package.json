@@ -1,5 +1,5 @@
 {
-  "name": "@napolab/typescript",
+  "name": "music-player",
   "version": "1.0.0",
   "private": false,
   "type": "module",
@@ -9,8 +9,8 @@
   "scripts": {
     "postinstall": "patch-package",
     "generate": "drizzle-kit generate:sqlite --out migrations --schema db/schema/*",
-    "migrate": "wrangler d1 migrations apply music-player --local",
-    "production-migrate": "wrangler d1 migrations apply music-player",
+    "migrate": "source .env && wrangler d1 migrations apply $DATABASE_NAME --local",
+    "production-migrate": "source .env && wrangler d1 migrations apply $DATABASE_NAME",
     "dev": "wrangler pages dev --d1=DB --persist -- vite dev",
     "prebuild": "rimraf dist",
     "build": "vite build",
@@ -26,7 +26,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "author": "@naporin0624",
+  "author": "na-go",
   "license": "MIT",
   "overrides": {
     "tsconfig-paths": "^4.0.0"
