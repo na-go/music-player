@@ -38,3 +38,9 @@ main に push すると自動でデプロイされる
 - vanilla-extract
 - Vite
 - cloudflare pages
+
+## Documentation
+
+- [Architecture Design Philosophy](./docs/ARCHITECTURE.md) - 設計思想とアーキテクチャパターン
+- [Onboarding Guide](./docs/ONBOARDING.md) - 開発者向けオンボーディング資料
+- [CLAUDE.md](./CLAUDE.md) - Claude Code向けガイド
