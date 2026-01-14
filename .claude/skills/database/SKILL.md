@@ -1,14 +1,8 @@
 ---
-description: Guide for database operations with Drizzle ORM and Cloudflare D1
-patterns:
-  - "db/schema/**"
-  - "**/migrations/**"
-keywords:
-  - "drizzle"
-  - "migration"
-  - "schema"
-  - "database"
-  - "d1"
+name: database
+description: >
+  Guide for database operations with Drizzle ORM and Cloudflare D1.
+  Use when working with db/schema/ files, migrations, or when user mentions database, schema, migration, drizzle, or D1.
 ---
 
 # Database Operations

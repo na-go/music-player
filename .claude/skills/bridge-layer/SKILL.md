@@ -1,7 +1,8 @@
 ---
-description: Guide for developing Bridge Layer (react/) - Hooks that convert Observables to React state
-patterns:
-  - "src/react/**"
+name: bridge-layer
+description: >
+  Guide for developing Bridge Layer (react/) - Hooks that convert Observables to React state.
+  Use when working with files in src/react/ or when creating React Hooks that subscribe to Observables.
 ---
 
 # Bridge Layer Development

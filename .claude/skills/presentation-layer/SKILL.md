@@ -1,8 +1,8 @@
 ---
-description: Guide for developing Presentation Layer (components/, views/) - pure UI components
-patterns:
-  - "src/components/**"
-  - "src/views/**"
+name: presentation-layer
+description: >
+  Guide for developing Presentation Layer (components/, views/) - pure UI components.
+  Use when working with files in src/components/ or src/views/, or when creating React components.
 ---
 
 # Presentation Layer Development

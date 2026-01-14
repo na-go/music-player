@@ -1,11 +1,8 @@
 ---
-description: Guide for error handling using Result type (neverthrow)
-keywords:
-  - "error"
-  - "null"
-  - "undefined"
-  - "result"
-  - "neverthrow"
+name: error-handling
+description: >
+  Guide for error handling using Result type (neverthrow).
+  Use when dealing with error handling, null checks, undefined values, or when user mentions Result type or neverthrow.
 ---
 
 # Error Handling with Result Type

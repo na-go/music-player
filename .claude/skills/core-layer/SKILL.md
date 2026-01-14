@@ -1,8 +1,8 @@
 ---
-description: Guide for developing Core Layer (services/) - framework-independent business logic
-patterns:
-  - "src/services/**"
-  - "**/*services*/**"
+name: core-layer
+description: >
+  Guide for developing Core Layer (services/) - framework-independent business logic.
+  Use when working with files in src/services/ or when implementing business logic with RxJS Observables.
 ---
 
 # Core Layer Development
